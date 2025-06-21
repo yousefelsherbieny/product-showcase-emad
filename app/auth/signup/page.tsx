@@ -3,16 +3,88 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { signUpWithEmail, signInWithGoogle, createUserProfile, logSignUp, logError } from "../../../lib/firebase"
 
 export default function SignupPage() {
-  const [email, setEmail] = useState("")
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    displayName: "",
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleEmailSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Redirect to company registration
-    window.location.href = "/auth/company-registration"
+    setIsLoading(true)
+    setError("")
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      setIsLoading(false)
+      return
+    }
+
+    // Validate password length
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long")
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      // Create user with Firebase Auth
+      const user = await signUpWithEmail(formData.email, formData.password, formData.displayName)
+      
+      // Create user profile in Firestore
+      await createUserProfile(user.uid, {
+        email: user.email || formData.email,
+        displayName: formData.displayName || user.displayName || "",
+        photoURL: user.photoURL || "",
+      })
+
+      logSignUp("email")
+      router.push("/")
+    } catch (error: any) {
+      setError(error.message)
+      logError(error.message, "email_signup")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignup = async () => {
+    setIsLoading(true)
+    setError("")
+
+    try {
+      const user = await signInWithGoogle()
+      
+      // Create user profile in Firestore
+      await createUserProfile(user.uid, {
+        email: user.email || "",
+        displayName: user.displayName || "",
+        photoURL: user.photoURL || "",
+      })
+
+      logSignUp("google")
+      router.push("/")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -84,24 +156,80 @@ export default function SignupPage() {
               Doorstep.
             </p>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email/Mobile Number</label>
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter Your Email Or Mobile Number"
-                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-6"
-                required
-              />
-            </div>
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm mb-6">
+                {error}
+              </div>
+            )}
 
-            <Button
-              onClick={handleSubmit}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium mb-6"
-            >
-              Continue
-            </Button>
+            {/* Signup Form */}
+            <form onSubmit={handleEmailSignup} className="space-y-4 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input
+                  type="text"
+                  name="displayName"
+                  value={formData.displayName}
+                  onChange={handleInputChange}
+                  placeholder="Enter Your Full Name"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter Your Email"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Create a Password (min. 6 characters)"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  minLength={6}
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Confirm Your Password"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md font-medium"
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating Account..." : "Create Account"}
+              </Button>
+            </form>
 
             {/* Divider */}
             <div className="relative mb-6">
@@ -115,14 +243,19 @@ export default function SignupPage() {
 
             {/* Social Login Buttons */}
             <div className="space-y-3">
-              <Button variant="outline" className="w-full flex items-center justify-center gap-3 h-12 border-gray-300">
+              <Button variant="outline" className="w-full flex items-center justify-center gap-3 h-12 border-gray-300" disabled>
                 <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center">
                   <span className="text-white text-xs font-bold">in</span>
                 </div>
                 <span className="text-gray-700">LinkedIn</span>
               </Button>
 
-              <Button variant="outline" className="w-full flex items-center justify-center gap-3 h-12 border-gray-300">
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-3 h-12 border-gray-300"
+                onClick={handleGoogleSignup}
+                disabled={isLoading}
+              >
                 <div className="w-5 h-5">
                   <svg viewBox="0 0 24 24" className="w-full h-full">
                     <path
@@ -143,12 +276,13 @@ export default function SignupPage() {
                     />
                   </svg>
                 </div>
-                <span className="text-gray-700">Google</span>
+                <span className="text-gray-700">{isLoading ? "Signing up..." : "Google"}</span>
               </Button>
 
               <Button
                 variant="outline"
                 className="w-full flex items-center justify-center gap-3 h-12 border-gray-300 bg-black text-white hover:bg-gray-800"
+                disabled
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
@@ -160,11 +294,19 @@ export default function SignupPage() {
 
           {/* Footer */}
           <div className="text-center text-xs text-gray-500">
-            By Clicking "Continue With Email Or Phone Number," You Will Read Your Account Password. Having Trouble?{" "}
+            By Creating An Account, You Agree To Swagifyy\"s{" "}
+            <Link href="/terms" className="text-blue-600 hover:underline">
+              Terms & Conditions
+            </Link>{" "}
+            And{" "}
+            <Link href="/privacy" className="text-blue-600 hover:underline">
+              Privacy Policy
+            </Link>
+            . Having Trouble?{" "}
             <Link href="/support" className="text-blue-600 hover:underline">
               Contact Us
             </Link>{" "}
-            — We'd Be Happy To Help.
+            — We\"d Be Happy To Help.
           </div>
         </div>
       </div>
