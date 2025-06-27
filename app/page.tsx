@@ -269,113 +269,12 @@ export default function Home() {
       </motion.section>
 
       {/* 3D Product Viewer Section */}
-      <section className="py-20 relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
-            <AnimatedText
-              type="chars"
-              stagger={0.02}
-              y={20}
-              className="text-sm font-medium tracking-wider uppercase text-primary inline-block px-3 py-1 rounded-full bg-primary/20 mb-2"
-              onScrollTrigger={true}
-            >
-              Interactive Experience
-            </AnimatedText>
 
-            <AnimatedText
-              type="words"
-              stagger={0.05}
-              y={30}
-              className="text-3xl md:text-4xl font-bold mb-4 text-white"
-              onScrollTrigger={true}
-            >
-              Interact With Our 3D Products
-            </AnimatedText>
-
-            <AnimatedText
-              type="lines"
-              stagger={0.08}
-              y={20}
-              className="text-lg text-gray-300 max-w-2xl mx-auto"
-              onScrollTrigger={true}
-            >
-              SWAGIFYY brings products to life with immersive 3D technology. Examine every angle and detail before
-              making your purchase.
-            </AnimatedText>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="h-[500px] bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
-              {/* Use a more reliable path or provide a fallback */}
-              <ProductViewer modelPath="/models/jacket.glb" />
-            </div>
-
-            <div className="space-y-6">
-              <div className="space-y-4">
-                <AnimatedText
-                  type="words"
-                  stagger={0.05}
-                  y={20}
-                  className="text-2xl font-bold text-white"
-                  onScrollTrigger={true}
-                >
-                  Premium Urban Jacket
-                </AnimatedText>
-
-                <AnimatedText type="lines" stagger={0.08} y={20} className="text-gray-300" onScrollTrigger={true}>
-                  Our 3D-designed products combine cutting-edge technology with premium materials. Experience the future
-                  of online shopping with SWAGIFYY.
-                </AnimatedText>
-
-                <div className="flex items-center gap-1 mb-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="w-5 h-5 fill-primary text-primary" />
-                  ))}
-                  <span className="ml-2 text-sm text-gray-300">(128 reviews)</span>
-                </div>
-
-                <FloatingText
-                  amplitude={5}
-                  frequency={3}
-                  direction="vertical"
-                  className="text-2xl font-bold text-white"
-                >
-                  $149.99
-                </FloatingText>
-              </div>
-
-              <div className="space-y-4">
-                <p className="font-medium text-white">Select Color:</p>
-                <ColorPicker activeColor={activeColor} onChange={handleColorChange} />
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/cart" passHref>
-                  <Button size="lg" className="flex-1 group">
-                    <ShoppingBag className="mr-2 h-5 w-5" />
-                    <span>Add to Cart</span>
-                  </Button>
-                </Link>
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="flex-1 group bg-gray-800/50 text-white hover:bg-pink-900/30"
-                >
-                  <Heart className="mr-2 h-5 w-5 group-hover:fill-pink-500 group-hover:text-pink-500 transition-colors duration-300" />
-                  <span className="group-hover:text-pink-500 transition-colors duration-300">Add to Wishlist</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Interactive Models Section with Hover Effects */}
       <InteractiveModelsSection />
 
       {/* Scroll Animation Section */}
-      <ScrollAnimationSection />
 
       {/* Product Collection */}
       <section className="py-20 relative z-10">
