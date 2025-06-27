@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Character = () => {
-  return <div>Hello World</div>;
+  return <div>Hello Worwwld</div>;
 };
 
 export default Character;
