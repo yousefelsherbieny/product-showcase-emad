@@ -55,6 +55,16 @@ export default function Navbar() {
                 Cart
               </Button>
             </Link>
+             <Link href="/Character" passHref>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-white/20 text-white hover:bg-white/10 rounded-md"
+              >
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Character
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
