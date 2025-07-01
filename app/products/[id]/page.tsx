@@ -1,17 +1,18 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowLeft, ShoppingBag, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Navbar from "@/components/navbar"
-import ObjectParticles from "@/components/backgrounds/object-particles"
-import ProductDetailViewer from "@/components/product-detail-viewer"
-import ColorPicker from "@/components/color-picker"
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowLeft, ShoppingBag, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Navbar from "@/components/navbar";
+import ObjectParticles from "@/components/backgrounds/object-particles";
+import ProductDetailViewer from "@/components/product-detail-viewer";
+import ColorPicker from "@/components/color-picker";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 
-// Product data with color options
 const productsData = [
   {
     id: "1",
@@ -34,6 +35,11 @@ const productsData = [
       "Water resistant",
       "Notification alerts",
       "7-day battery life",
+    ],
+     images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
     ],
   },
   {
@@ -58,6 +64,11 @@ const productsData = [
       "Built-in microphone",
       "Multi-speaker pairing",
     ],
+         images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
+    ],
   },
   {
     id: "3",
@@ -80,6 +91,11 @@ const productsData = [
       "Breathable fabric",
       "Machine washable",
     ],
+         images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
+    ],
   },
   {
     id: "4",
@@ -96,7 +112,13 @@ const productsData = [
       { id: "pink", name: "Pink", hex: "#ec4899" },
     ],
     features: ["Microwave safe", "Dishwasher safe", "12oz capacity", "Ergonomic handle", "Non-slip base"],
+           images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
+    ],
   },
+
   {
     id: "5",
     name: "Water Bottle",
@@ -119,6 +141,11 @@ const productsData = [
       "750ml capacity",
       "Easy-carry handle",
     ],
+         images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
+    ],
   },
   {
     id: "6",
@@ -135,55 +162,51 @@ const productsData = [
       { id: "brown", name: "Brown", hex: "#92400e" },
     ],
     features: ["200 acid-free pages", "Durable binding", "Elastic closure", "Inner pocket", "Bookmark ribbon"],
+         images: [
+      "/images/product-blue.jpeg",
+      "/images/product-pink.jpeg",
+      "/images/product-purple.jpeg",
+    ],
   },
+  
 ]
 
 export default function ProductDetailPage() {
-  const router = useRouter()
-  const { id } = useParams()
-  const [product, setProduct] = useState(null)
-  const [activeColor, setActiveColor] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter();
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [activeColor, setActiveColor] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Find the product based on the ID
-    const foundProduct = productsData.find((p) => p.id === id)
-
+    const foundProduct = productsData.find((p) => p.id === id);
     if (foundProduct) {
-      setProduct(foundProduct)
-      setActiveColor(foundProduct.colors[0].id)
+      setProduct(foundProduct);
+      setActiveColor(foundProduct.colors[0].id);
     } else {
-      // Handle product not found
-      router.push("/products")
+      router.push("/products");
     }
+    setIsLoading(false);
+  }, [id, router]);
 
-    setIsLoading(false)
-  }, [id, router])
-
-  const handleColorChange = (colorId) => {
-    setActiveColor(colorId)
-  }
-
+  const handleColorChange = (colorId) => setActiveColor(colorId);
   if (isLoading || !product) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="w-16 h-16 border-4 border-t-primary border-b-primary rounded-full animate-spin"></div>
       </div>
-    )
+    );
   }
 
-  // Find the active color object
-  const currentColor = product.colors.find((c) => c.id === activeColor)
+  const currentColor = product.colors.find((c) => c.id === activeColor);
 
   return (
     <main className="relative min-h-screen bg-gray-900 text-white">
-      {/* 3D Objects Background */}
       <div className="fixed inset-0 z-0">
         <ObjectParticles count={20} background="#111827" />
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-transparent to-gray-900/70 pointer-events-none"></div>
       </div>
 
-      {/* Navbar */}
       <Navbar />
 
       <div className="container mx-auto px-6 py-12 relative z-10 pt-24">
@@ -194,8 +217,19 @@ export default function ProductDetailPage() {
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* 3D Model Viewer */}
+        <div className="grid md:grid-cols-2 gap-6 items-start mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg"
+          >
+            <ImageGallery
+              items={product.images.map((img) => ({ original: img, thumbnail: img }))}
+              showPlayButton={false}
+            />
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -208,55 +242,54 @@ export default function ProductDetailPage() {
               colorHex={currentColor.hex}
             />
           </motion.div>
-
-          {/* Product Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
-          >
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-              <p className="text-2xl font-bold text-primary mb-4">{product.price}</p>
-              <p className="text-gray-300 mb-6">{product.description}</p>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Select Color:</h3>
-              <ColorPicker colors={product.colors} activeColor={activeColor} onChange={handleColorChange} />
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Features:</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-primary mr-3"></span>
-                    <span className="text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="flex-1">
-                <ShoppingBag className="mr-2 h-5 w-5" />
-                Add to Cart
-              </Button>
-
-              <Button
-                variant="outline"
-                size="lg"
-                className="flex-1 bg-gray-800/50 border-gray-700 hover:bg-gray-700/50"
-              >
-                <Heart className="mr-2 h-5 w-5" />
-                Add to Wishlist
-              </Button>
-            </div>
-          </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-6"
+        >
+          <div>
+            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+            <p className="text-2xl font-bold text-primary mb-4">{product.price}</p>
+            <p className="text-gray-300 mb-6">{product.description}</p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Select Color:</h3>
+            <ColorPicker colors={product.colors} activeColor={activeColor} onChange={handleColorChange} />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Features:</h3>
+            <ul className="space-y-2">
+              {product.features.map((feature, index) => (
+                <li key={index} className="flex items-center">
+                  <span className="h-2 w-2 rounded-full bg-primary mr-3"></span>
+                  <span className="text-gray-300">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Button size="lg" className="flex-1">
+              <ShoppingBag className="mr-2 h-5 w-5" />
+              Add to Cart
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="flex-1 bg-gray-800/50 border-gray-700 hover:bg-gray-700/50"
+            >
+              <Heart className="mr-2 h-5 w-5" />
+              Add to Wishlist
+            </Button>
+          </div>
+        </motion.div>
       </div>
     </main>
-  )
+  );
 }
