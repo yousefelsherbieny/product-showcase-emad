@@ -1,22 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useParams } from "next/navigation";
 import ImageGallery from "react-image-gallery";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import {
+  OrbitControls,
+  useGLTF,
+  Html,
+  useProgress,
+} from "@react-three/drei";
 import "react-image-gallery/styles/css/image-gallery.css";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Heart, ShoppingBag } from "lucide-react";
 
-// Dummy data (تقدر تخليها من API أو JSON خارجي بعدين)
+// بيانات المنتجات
 const products: Record<string, any> = {
   "1": {
     name: "Smart Watch Pro X",
     price: 149.99,
-    model: "/models/Lol.glb",
+    model:
+      "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lol-KgsAoE24JXM5kYYtSoMtUMbi6K3Tdk.glb",
     description:
       "Modern smartwatch with health and fitness tracking. Track your heart rate, sleep, and steps.",
     images: [
@@ -28,18 +34,39 @@ const products: Record<string, any> = {
   "2": {
     name: "Fitness Tracker Mini",
     price: 99.99,
-    model: "/models/mug.glb",
+      model: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mug-BivPFFfCD2ohHqrX8QLYUs7IfC9NJr.glb",
     description:
       "Compact fitness tracker for daily activities and health insights.",
     images: ["/images/product-pink.jpeg", "/images/product-purple.jpeg"],
   },
 };
 
+// تحميل الموديل
 function ModelViewer({ modelPath }: { modelPath: string }) {
   const { scene } = useGLTF(modelPath);
   return <primitive object={scene} scale={1} />;
 }
 
+// Progress bar + نص
+function LoadingModel() {
+  const { progress } = useProgress();
+
+  return (
+    <Html center>
+      <div className="flex flex-col items-center text-sm text-white bg-black/70 px-6 py-4 rounded-xl shadow-lg min-w-[200px]">
+        <span className="mb-2">Loading 3D model</span>
+        <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+          <div
+            className="bg-cyan-400 h-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    </Html>
+  );
+}
+
+// صفحة التفاصيل
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const product = products[id as string];
@@ -74,7 +101,9 @@ const ProductDetailsPage = () => {
               <ambientLight intensity={0.5} />
               <directionalLight position={[5, 5, 5]} />
               <OrbitControls />
-              <ModelViewer modelPath={product.model} />
+              <Suspense fallback={<LoadingModel />}>
+                <ModelViewer modelPath={product.model} />
+              </Suspense>
             </Canvas>
           </div>
         </div>

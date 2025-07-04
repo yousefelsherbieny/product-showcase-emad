@@ -8,13 +8,30 @@ import {
   Float,
   ContactShadows,
   Html,
+  useProgress,
 } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 
-// Update the Model component to handle model loading more robustly
+function ModelLoader() {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div className="flex flex-col items-center text-white bg-black/70 px-4 py-2 rounded-md shadow-md min-w-[150px]">
+        <span className="text-xs mb-2">Loading 3D model...</span>
+        <div className="w-full h-1 bg-gray-600 rounded-full overflow-hidden">
+          <div
+            className="bg-cyan-400 h-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    </Html>
+  );
+}
+
 function Model({
   modelUrl,
   modelType,
@@ -29,23 +46,19 @@ function Model({
   const [model, setModel] = useState(null);
 
   useEffect(() => {
-    // Load the model
     const loader = new GLTFLoader();
     loader.load(
       modelUrl,
       (gltf) => {
-        // Success callback
         setModel(gltf.scene);
       },
       undefined,
       (error) => {
-        // Error callback
         console.error(`Error loading model from ${modelUrl}:`, error);
         setModelError(true);
       }
     );
 
-    // Cleanup
     return () => {
       if (model) {
         model.traverse((child) => {
@@ -64,7 +77,6 @@ function Model({
     };
   }, [modelUrl]);
 
-  // Create a fallback geometry based on model type
   const getFallbackGeometry = () => {
     switch (modelType) {
       case "smartwatch":
@@ -72,19 +84,11 @@ function Model({
           <group>
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[0.8, 0.9, 0.2]} />
-              <meshStandardMaterial
-                color={0x333333}
-                roughness={0.3}
-                metalness={0.7}
-              />
+              <meshStandardMaterial color={0x333333} roughness={0.3} metalness={0.7} />
             </mesh>
             <mesh position={[0, 0, 0.11]}>
               <boxGeometry args={[0.7, 0.8, 0.01]} />
-              <meshStandardMaterial
-                color="#000000"
-                roughness={0.2}
-                metalness={0.5}
-              />
+              <meshStandardMaterial color="#000000" roughness={0.2} metalness={0.5} />
             </mesh>
           </group>
         );
@@ -93,11 +97,7 @@ function Model({
           <group>
             <mesh position={[0, 0, 0]}>
               <cylinderGeometry args={[0.8, 0.8, 2, 32]} />
-              <meshStandardMaterial
-                color={0x222222}
-                roughness={0.3}
-                metalness={0.5}
-              />
+              <meshStandardMaterial color={0x222222} roughness={0.3} metalness={0.5} />
             </mesh>
           </group>
         );
@@ -106,11 +106,7 @@ function Model({
           <group>
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[1.5, 2, 0.5]} />
-              <meshStandardMaterial
-                color={0x3b82f6}
-                roughness={0.5}
-                metalness={0.2}
-              />
+              <meshStandardMaterial color={0x3b82f6} roughness={0.5} metalness={0.2} />
             </mesh>
           </group>
         );
@@ -118,44 +114,31 @@ function Model({
         return (
           <mesh>
             <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial
-              color={0x3b82f6}
-              roughness={0.3}
-              metalness={0.7}
-            />
+            <meshStandardMaterial color={0x3b82f6} roughness={0.3} metalness={0.7} />
           </mesh>
         );
     }
   };
 
-  // Animate the model
   useFrame((state) => {
     if (group.current) {
-      // Subtle floating animation
       const t = state.clock.getElapsedTime();
       group.current.rotation.y = Math.sin(t / 4) * 0.3 + rotation[1];
-
-      // Additional rotation speed when hovered
       if (hovered) {
         group.current.rotation.y += 0.01;
       }
     }
   });
 
-  // Get model scale based on type
   const getModelScale = () => {
     const baseScale = scale;
     switch (modelType) {
       case "smartwatch":
-        return baseScale * 5;
-      case "speaker":
-        return baseScale * 2.5;
       case "mug":
-        return baseScale * 5;
       case "bottle":
-        return baseScale * 5;
       case "notebook":
         return baseScale * 5;
+      case "speaker":
       case "jacket":
         return baseScale * 2.5;
       default:
@@ -165,35 +148,23 @@ function Model({
 
   return (
     <group ref={group} {...props} dispose={null}>
-      {modelError || !model ? (
-        // Render fallback if there's an error
+      {modelError ? (
         <group scale={getModelScale()} position={position} rotation={rotation}>
           {getFallbackGeometry()}
         </group>
+      ) : model ? (
+        <primitive object={model} scale={getModelScale()} position={position} rotation={rotation} />
       ) : (
-        // Render the actual model if available
-        <primitive
-          object={model}
-          scale={getModelScale()}
-          position={position}
-          rotation={rotation}
-        />
+        <ModelLoader />
       )}
     </group>
   );
 }
 
-export default function ProductModelCard({
-  title,
-  description,
-  price,
-  modelUrl,
-  modelType,
-}) {
+export default function ProductModelCard({ title, description, price, modelUrl, modelType }) {
   const [hovered, setHovered] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
-  // Event handlers
   const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => setHovered(false);
   const toggleInfo = (e) => {
@@ -209,13 +180,7 @@ export default function ProductModelCard({
     >
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 45 }}>
         <ambientLight intensity={0.5} />
-        <spotLight
-          position={[10, 10, 10]}
-          angle={0.15}
-          penumbra={1}
-          intensity={1}
-          castShadow
-        />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <PresentationControls
           global
           zoom={1.2}
@@ -238,15 +203,8 @@ export default function ProductModelCard({
             />
           </Float>
         </PresentationControls>
-        <ContactShadows
-          position={[0, -1.5, 0]}
-          opacity={0.4}
-          scale={5}
-          blur={2.5}
-        />
+        <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} />
         <Environment preset="city" />
-
-        {/* Product info overlay */}
         {showInfo && (
           <Html position={[0, 0, 0]} center>
             <div className="bg-gray-900/80 backdrop-blur-md p-4 rounded-lg text-white w-64 shadow-xl">
@@ -258,11 +216,9 @@ export default function ProductModelCard({
         )}
       </Canvas>
 
-      {/* UI Controls */}
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-900 to-transparent">
         <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
         <p className="text-gray-300 text-sm mb-3">{price}</p>
-
         <div className="flex justify-between items-center">
           <span className="text-sm text-primary font-medium">View Details</span>
           <Button
