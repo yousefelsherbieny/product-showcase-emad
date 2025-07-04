@@ -33,7 +33,9 @@ const ProductsList = () => {
       <Navbar />
 
       <div className="container mx-auto px-6 py-24 relative z-10">
-        <h1 className="text-3xl font-bold mb-8 text-center">All Smartwatches</h1>
+        <h1 className="text-3xl font-bold mb-8 text-center">
+          All Smartwatches
+        </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((product) => (

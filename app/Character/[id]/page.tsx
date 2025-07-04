@@ -16,7 +16,7 @@ const products: Record<string, any> = {
   "1": {
     name: "Smart Watch Pro X",
     price: 149.99,
-    model: "/models/mug.glb",
+    model: "/models/Lol.glb",
     description:
       "Modern smartwatch with health and fitness tracking. Track your heart rate, sleep, and steps.",
     images: [
@@ -28,12 +28,10 @@ const products: Record<string, any> = {
   "2": {
     name: "Fitness Tracker Mini",
     price: 99.99,
-    model: "/models/smartwatch.glb",
-    description: "Compact fitness tracker for daily activities and health insights.",
-    images: [
-      "/images/product-pink.jpeg",
-      "/images/product-purple.jpeg",
-    ],
+    model: "/models/mug.glb",
+    description:
+      "Compact fitness tracker for daily activities and health insights.",
+    images: ["/images/product-pink.jpeg", "/images/product-purple.jpeg"],
   },
 };
 
@@ -85,7 +83,9 @@ const ProductDetailsPage = () => {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <h1 className="text-3xl font-bold">{product.name}</h1>
-            <p className="text-gray-400 text-sm">Premium smartwatch with advanced features</p>
+            <p className="text-gray-400 text-sm">
+              Premium smartwatch with advanced features
+            </p>
             <p className="text-primary text-2xl font-bold">${product.price}</p>
 
             <div className="flex gap-2">
@@ -108,7 +108,9 @@ const ProductDetailsPage = () => {
         {/* وصف المنتج */}
         <div className="max-w-6xl mx-auto bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl shadow-lg">
           <h2 className="text-xl font-bold mb-4">Product Description</h2>
-          <p className="text-gray-300 text-sm leading-relaxed">{product.description}</p>
+          <p className="text-gray-300 text-sm leading-relaxed">
+            {product.description}
+          </p>
         </div>
       </div>
     </main>

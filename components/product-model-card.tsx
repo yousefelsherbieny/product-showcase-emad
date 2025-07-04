@@ -1,54 +1,68 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { Environment, PresentationControls, Float, ContactShadows, Html } from "@react-three/drei"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
-import * as THREE from "three"
-import { Button } from "@/components/ui/button"
-import { Info } from "lucide-react"
+import { useState, useRef, useEffect } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  Environment,
+  PresentationControls,
+  Float,
+  ContactShadows,
+  Html,
+} from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import * as THREE from "three";
+import { Button } from "@/components/ui/button";
+import { Info } from "lucide-react";
 
 // Update the Model component to handle model loading more robustly
-function Model({ modelUrl, modelType, scale = 1, position = [0, 0, 0], rotation = [0, 0, 0], hovered, ...props }) {
-  const group = useRef()
-  const [modelError, setModelError] = useState(false)
-  const [model, setModel] = useState(null)
+function Model({
+  modelUrl,
+  modelType,
+  scale = 1,
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
+  hovered,
+  ...props
+}) {
+  const group = useRef();
+  const [modelError, setModelError] = useState(false);
+  const [model, setModel] = useState(null);
 
   useEffect(() => {
     // Load the model
-    const loader = new GLTFLoader()
+    const loader = new GLTFLoader();
     loader.load(
       modelUrl,
       (gltf) => {
         // Success callback
-        setModel(gltf.scene)
+        setModel(gltf.scene);
       },
       undefined,
       (error) => {
         // Error callback
-        console.error(`Error loading model from ${modelUrl}:`, error)
-        setModelError(true)
-      },
-    )
+        console.error(`Error loading model from ${modelUrl}:`, error);
+        setModelError(true);
+      }
+    );
 
     // Cleanup
     return () => {
       if (model) {
         model.traverse((child) => {
           if (child instanceof THREE.Mesh) {
-            if (child.geometry) child.geometry.dispose()
+            if (child.geometry) child.geometry.dispose();
             if (child.material) {
               if (Array.isArray(child.material)) {
-                child.material.forEach((material) => material.dispose())
+                child.material.forEach((material) => material.dispose());
               } else {
-                child.material.dispose()
+                child.material.dispose();
               }
             }
           }
-        })
+        });
       }
-    }
-  }, [modelUrl])
+    };
+  }, [modelUrl]);
 
   // Create a fallback geometry based on model type
   const getFallbackGeometry = () => {
@@ -58,76 +72,96 @@ function Model({ modelUrl, modelType, scale = 1, position = [0, 0, 0], rotation 
           <group>
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[0.8, 0.9, 0.2]} />
-              <meshStandardMaterial color={0x333333} roughness={0.3} metalness={0.7} />
+              <meshStandardMaterial
+                color={0x333333}
+                roughness={0.3}
+                metalness={0.7}
+              />
             </mesh>
             <mesh position={[0, 0, 0.11]}>
               <boxGeometry args={[0.7, 0.8, 0.01]} />
-              <meshStandardMaterial color="#000000" roughness={0.2} metalness={0.5} />
+              <meshStandardMaterial
+                color="#000000"
+                roughness={0.2}
+                metalness={0.5}
+              />
             </mesh>
           </group>
-        )
+        );
       case "speaker":
         return (
           <group>
             <mesh position={[0, 0, 0]}>
               <cylinderGeometry args={[0.8, 0.8, 2, 32]} />
-              <meshStandardMaterial color={0x222222} roughness={0.3} metalness={0.5} />
+              <meshStandardMaterial
+                color={0x222222}
+                roughness={0.3}
+                metalness={0.5}
+              />
             </mesh>
           </group>
-        )
+        );
       case "jacket":
         return (
           <group>
             <mesh position={[0, 0, 0]}>
               <boxGeometry args={[1.5, 2, 0.5]} />
-              <meshStandardMaterial color={0x3b82f6} roughness={0.5} metalness={0.2} />
+              <meshStandardMaterial
+                color={0x3b82f6}
+                roughness={0.5}
+                metalness={0.2}
+              />
             </mesh>
           </group>
-        )
+        );
       default:
         return (
           <mesh>
             <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={0x3b82f6} roughness={0.3} metalness={0.7} />
+            <meshStandardMaterial
+              color={0x3b82f6}
+              roughness={0.3}
+              metalness={0.7}
+            />
           </mesh>
-        )
+        );
     }
-  }
+  };
 
   // Animate the model
   useFrame((state) => {
     if (group.current) {
       // Subtle floating animation
-      const t = state.clock.getElapsedTime()
-      group.current.rotation.y = Math.sin(t / 4) * 0.3 + rotation[1]
+      const t = state.clock.getElapsedTime();
+      group.current.rotation.y = Math.sin(t / 4) * 0.3 + rotation[1];
 
       // Additional rotation speed when hovered
       if (hovered) {
-        group.current.rotation.y += 0.01
+        group.current.rotation.y += 0.01;
       }
     }
-  })
+  });
 
   // Get model scale based on type
   const getModelScale = () => {
-    const baseScale = scale
+    const baseScale = scale;
     switch (modelType) {
       case "smartwatch":
-        return baseScale * 3
+        return baseScale * 5;
       case "speaker":
-        return baseScale * 2.5
+        return baseScale * 2.5;
       case "mug":
-        return baseScale * 2
+        return baseScale * 5;
       case "bottle":
-        return baseScale * 2
+        return baseScale * 5;
       case "notebook":
-        return baseScale * 1.5
+        return baseScale * 5;
       case "jacket":
-        return baseScale * 1
+        return baseScale * 2.5;
       default:
-        return baseScale
+        return baseScale;
     }
-  }
+  };
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -138,23 +172,34 @@ function Model({ modelUrl, modelType, scale = 1, position = [0, 0, 0], rotation 
         </group>
       ) : (
         // Render the actual model if available
-        <primitive object={model} scale={getModelScale()} position={position} rotation={rotation} />
+        <primitive
+          object={model}
+          scale={getModelScale()}
+          position={position}
+          rotation={rotation}
+        />
       )}
     </group>
-  )
+  );
 }
 
-export default function ProductModelCard({ title, description, price, modelUrl, modelType }) {
-  const [hovered, setHovered] = useState(false)
-  const [showInfo, setShowInfo] = useState(false)
+export default function ProductModelCard({
+  title,
+  description,
+  price,
+  modelUrl,
+  modelType,
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   // Event handlers
-  const handleMouseEnter = () => setHovered(true)
-  const handleMouseLeave = () => setHovered(false)
+  const handleMouseEnter = () => setHovered(true);
+  const handleMouseLeave = () => setHovered(false);
   const toggleInfo = (e) => {
-    e.stopPropagation()
-    setShowInfo(!showInfo)
-  }
+    e.stopPropagation();
+    setShowInfo(!showInfo);
+  };
 
   return (
     <div
@@ -164,7 +209,13 @@ export default function ProductModelCard({ title, description, price, modelUrl, 
     >
       <Canvas shadows camera={{ position: [0, 0, 5], fov: 45 }}>
         <ambientLight intensity={0.5} />
-        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+        <spotLight
+          position={[10, 10, 10]}
+          angle={0.15}
+          penumbra={1}
+          intensity={1}
+          castShadow
+        />
         <PresentationControls
           global
           zoom={1.2}
@@ -172,7 +223,11 @@ export default function ProductModelCard({ title, description, price, modelUrl, 
           polar={[-Math.PI / 4, Math.PI / 4]}
           azimuth={[-Math.PI / 4, Math.PI / 4]}
         >
-          <Float speed={hovered ? 3 : 1} rotationIntensity={hovered ? 0.4 : 0.2} floatIntensity={hovered ? 0.6 : 0.3}>
+          <Float
+            speed={hovered ? 3 : 1}
+            rotationIntensity={hovered ? 0.4 : 0.2}
+            floatIntensity={hovered ? 0.6 : 0.3}
+          >
             <Model
               modelUrl={modelUrl}
               modelType={modelType}
@@ -183,7 +238,12 @@ export default function ProductModelCard({ title, description, price, modelUrl, 
             />
           </Float>
         </PresentationControls>
-        <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={5} blur={2.5} />
+        <ContactShadows
+          position={[0, -1.5, 0]}
+          opacity={0.4}
+          scale={5}
+          blur={2.5}
+        />
         <Environment preset="city" />
 
         {/* Product info overlay */}
@@ -205,11 +265,16 @@ export default function ProductModelCard({ title, description, price, modelUrl, 
 
         <div className="flex justify-between items-center">
           <span className="text-sm text-primary font-medium">View Details</span>
-          <Button size="sm" variant="outline" className="bg-gray-800/50 border-gray-700" onClick={toggleInfo}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="bg-gray-800/50 border-gray-700"
+            onClick={toggleInfo}
+          >
             <Info className="h-4 w-4" />
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }
