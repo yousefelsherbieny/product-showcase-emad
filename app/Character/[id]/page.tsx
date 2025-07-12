@@ -10,51 +10,115 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
 import AnimatedModel from "./AnimatedModel";
+
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Heart, Speech } from "lucide-react";
 
-/* ----------------------------------------------------------------------- */
-/* UPDATED product catalogue                                               */
-const products: Record<string, any> = {
+/* ---------------------------------------------------------------------- */
+/* Product catalogue — each item now has                                   
+      anim       → URL of its animation-only GLB                           
+      secondClip → name of the clip that is NOT “Idle” (e.g. Talk, Sing)  */
+const products: Record<
+  string,
+  {
+    name: string;
+    price: number;
+    model: string;
+    anim: string;
+    secondClip: "Talk" | "Sing";
+    description: string;
+    images: string[];
+  }
+> = {
   "1": {
-    name: "Smart Watch Pro X",
+    name: "Emaraty Local",
     price: 149.99,
     model:
       "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lol-KgsAoE24JXM5kYYtSoMtUMbi6K3Tdk.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Anims.glb",
+    secondClip: "Talk",
     description:
       "Modern smartwatch with health and fitness tracking. Track your heart rate, sleep, and steps.",
     images: [
-      "/images/product-blue.jpeg",
-      "/images/product-clothing.jpeg",
-      "/images/product-peach.jpeg",
+      "/images/IMARATY/I2.JPG",
+      "/images/IMARATY/I3.JPG",
+      "/images/IMARATY/I1.JPG",
     ],
   },
+
+  /* AMIR — Idle + Sing -------------------------------------------------- */
   "2": {
-    name: "Fitness Tracker Mini",
+    name: "Amir Eid",
     price: 99.99,
-    model:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mug-BivPFFfCD2ohHqrX8QLYUs7IfC9NJr.glb",
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Amir.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/AnimSng.glb",
+    secondClip: "Sing",
     description:
       "Compact fitness tracker for daily activities and health insights.",
-    images: ["/images/product-pink.jpeg", "/images/product-purple.jpeg"],
+    images: ["/images/EID/A1.JPG", "/images/EID/A4.JPG", "/images/EID/A3.JPG"],
   },
-  /* NEW LAB CHARACTER ---------------------------------------------------- */
+
+  /* LAB — Idle + Talk --------------------------------------------------- */
   "3": {
-    name: "Lab Assistant L-3",
+    name: "Labubu",
     price: 129.99,
     model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lab.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/AnimLb.glb",
+    secondClip: "Talk",
     description:
       "Interactive virtual lab assistant with animated speech and idle poses.",
     images: [
-      "/images/product-blue.jpeg",
-      "/images/product-clothing.jpeg",
-      "/images/product-peach.jpeg",
+      "/images/LABUBU/L4.jpg",
+      "/images/LABUBU/L2.jpg",
+      "/images/LABUBU/L3.jpg",
+    ],
+  },
+  "4": {
+    name: "Bellie eilesh",
+    price: 129.99,
+    model:
+      "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Bellie3.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Anims.glb",
+    secondClip: "Sing",
+    description:
+      "Interactive virtual lab assistant with animated speech and idle poses.",
+    images: [
+      "/images/BELLIE/B4.jpg",
+      "/images/BELLIE/B3.jpg",
+      "/images/BELLIE/B2.jpg",
+    ],
+  },
+  "5": {
+    name: "Elsa Frozen",
+    price: 129.99,
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Elsa.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/AnimSng.glb",
+    secondClip: "Sing",
+    description:
+      "Interactive virtual lab assistant with animated speech and idle poses.",
+    images: [
+      "/images/ELSA/E1.jpg",
+      "/images/ELSA/E2.jpg",
+      "/images/ELSA/E3.jpg",
+    ],
+  },
+  "6": {
+    name: "Messi",
+    price: 129.99,
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Messi.glb",
+    anim: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/AnimSng.glb",
+    secondClip: "Sing",
+    description:
+      "Interactive virtual lab assistant with animated speech and idle poses.",
+    images: [
+      "/images/Messi/ER.jpg",
+      "/images/Messi/F.jpg",
+      "/images/Messi/K.jpg",
     ],
   },
 };
 
-/* ----------------------------------------------------------------------- */
-/* Tiny loading HUD for Drei                                               */
+/* ---------------------------------------------------------------------- */
 function LoadingModel() {
   const { progress } = useProgress();
   return (
@@ -72,23 +136,23 @@ function LoadingModel() {
   );
 }
 
-/* ----------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const product = products[id as string];
-
-  const [talking, setTalking] = useState(false);
+  const [active, setActive] = useState(false); // false = Idle, true = secondClip
 
   if (!product)
     return <div className="text-white p-10">Product not found.</div>;
 
-  const images = product.images.map((src: string) => ({
+  const images = product.images.map((src) => ({
     original: src,
     thumbnail: src,
   }));
 
   return (
     <main className="relative min-h-screen bg-gray-900 text-white">
+      {/* background */}
       <div className="fixed inset-0 z-0">
         <ObjectParticles count={40} background="#111827" />
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-transparent to-gray-900/70 pointer-events-none" />
@@ -104,15 +168,15 @@ const ProductDetailsPage = () => {
           </div>
 
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg h-[400px] md:h-full">
-            <Canvas camera={{ position: [2, 2, 2], fov: 45 }}>
+            <Canvas camera={{ position: [-0.5, 1, 1], fov: 45 }}>
               <ambientLight intensity={0.5} />
               <directionalLight position={[5, 5, 5]} />
               <OrbitControls />
               <Suspense fallback={<LoadingModel />}>
                 <AnimatedModel
                   modelPath={product.model}
-                  animPath="https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Anims.glb"
-                  clip={talking ? "Talk" : "Idle"}
+                  animPath={product.anim}
+                  clip={active ? product.secondClip : "Idle"}
                 />
               </Suspense>
             </Canvas>
@@ -141,15 +205,16 @@ const ProductDetailsPage = () => {
                 <Heart className="mr-2 h-5 w-5" />
                 Wishlist
               </Button>
-
               <Button
                 variant="secondary"
                 size="lg"
                 className="flex-1"
-                onClick={() => setTalking((t) => !t)}
+                onClick={() => setActive((v) => !v)}
               >
                 <Speech className="mr-2 h-5 w-5" />
-                {talking ? "Stop Talking" : "Play Talk Anim"}
+                {active
+                  ? `Stop ${product.secondClip}`
+                  : `Play ${product.secondClip} Anim`}
               </Button>
             </div>
           </div>

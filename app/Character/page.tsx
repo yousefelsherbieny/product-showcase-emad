@@ -11,20 +11,38 @@ import { ArrowLeft, ShoppingCart } from "lucide-react";
 const products = [
   {
     id: "1",
-    name: "Smart Watch Pro X",
-    image: "/images/product-blue.jpeg",
+    name: "IMARATY Local",
+    image: "/images/IMARATY/I4.JPG",
     price: 149.99,
   },
   {
     id: "2",
-    name: "Fitness Tracker Mini",
-    image: "/images/product-purple.jpeg",
+    name: "Amir Eid",
+    image: "/images/EID/A2.JPG",
     price: 99.99,
   },
   {
     id: "3",
-    name: "Lab Assistant L-3",
-    image: "/images/product-purple.jpeg", // your new thumbnail
+    name: "Labubu",
+    image: "/images/LABUBU/L1.jpg", // your new thumbnail
+    price: 129.99,
+  },
+  {
+    id: "4",
+    name: "Bellie eilesh",
+    image: "/images/BELLIE/B1.jpg", // your new thumbnail
+    price: 129.99,
+  },
+  {
+    id: "5",
+    name: "Elsa Frozen",
+    image: "/images/ELSA/E4.jpg", // your new thumbnail
+    price: 129.99,
+  },
+  {
+    id: "6",
+    name: "Messi",
+    image: "/images/Messi/E.jpg", // your new thumbnail
     price: 129.99,
   },
 ];
