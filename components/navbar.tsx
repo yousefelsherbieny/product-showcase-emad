@@ -89,7 +89,7 @@ export default function Navbar() {
                 Character
               </Button>
             </Link>
-            <Link href="/About us" passHref>
+            <Link href="/about" passHref>
               <Button
                 variant="outline"
                 size="sm"
@@ -99,7 +99,7 @@ export default function Navbar() {
                 About Us
               </Button>
             </Link>
-            <Link href="/Contact Us" passHref>
+            <Link href="/contact" passHref>
               <Button
                 variant="outline"
                 size="sm"

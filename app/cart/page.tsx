@@ -1,19 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowLeft, Trash2, Plus, Minus, ShoppingBag, CreditCard } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import ObjectParticles from "@/components/backgrounds/object-particles"
-import Navbar from "@/components/navbar"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Trash2,
+  Plus,
+  Minus,
+  ShoppingBag,
+  CreditCard,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ObjectParticles from "@/components/backgrounds/object-particles";
+import Navbar from "@/components/navbar";
 
 export default function CartPage() {
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1);
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1)
-  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1))
+  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   return (
     <main className="relative min-h-screen bg-gray-900 text-white">
@@ -28,7 +35,10 @@ export default function CartPage() {
 
       <div className="container mx-auto px-6 py-12 relative z-10 pt-24">
         <div className="flex items-center mb-8">
-          <Link href="/" className="flex items-center text-gray-300 hover:text-white transition-colors">
+          <Link
+            href="/"
+            className="flex items-center text-gray-300 hover:text-white transition-colors"
+          >
             <ArrowLeft className="mr-2 h-5 w-5" />
             <span>Back to Shopping</span>
           </Link>
@@ -45,13 +55,20 @@ export default function CartPage() {
             >
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/3 aspect-square relative rounded-lg overflow-hidden bg-gray-700">
-                  <Image src="/images/product-blue.jpeg" alt="Premium Urban Jacket" fill className="object-cover" />
+                  <Image
+                    src="/images/product-blue.jpeg"
+                    alt="Premium Urban Jacket"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
 
                 <div className="flex-1 space-y-4">
                   <div>
                     <h3 className="text-xl font-bold">Premium Urban Jacket</h3>
-                    <p className="text-gray-300 text-sm">Color: Blue | Size: Medium</p>
+                    <p className="text-gray-300 text-sm">
+                      Color: Blue | Size: Medium
+                    </p>
                   </div>
 
                   <div className="flex items-center">
@@ -63,7 +80,9 @@ export default function CartPage() {
                       >
                         <Minus size={16} />
                       </button>
-                      <span className="px-3 py-1 min-w-[40px] text-center">{quantity}</span>
+                      <span className="px-3 py-1 min-w-[40px] text-center">
+                        {quantity}
+                      </span>
                       <button
                         onClick={increaseQuantity}
                         className="px-3 py-1 text-gray-300 hover:text-white transition-colors"
@@ -79,7 +98,9 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  <div className="text-xl font-bold">${(149.99 * quantity).toFixed(2)}</div>
+                  <div className="text-xl font-bold">
+                    ${(149.99 * quantity).toFixed(2)}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -94,14 +115,20 @@ export default function CartPage() {
                   >
                     <div className="aspect-square relative mb-2 rounded overflow-hidden bg-gray-600">
                       <Image
-                        src={`/images/product-${item === 1 ? "pink" : item === 2 ? "purple" : "peach"}.jpeg`}
+                        src={`/images/product-${
+                          item === 1 ? "pink" : item === 2 ? "purple" : "peach"
+                        }.jpeg`}
                         alt={`Suggested product ${item}`}
                         fill
                         className="object-cover"
                       />
                     </div>
-                    <h4 className="font-medium text-sm">Complementary Item {item}</h4>
-                    <p className="text-primary text-sm font-bold mt-1">$29.99</p>
+                    <h4 className="font-medium text-sm">
+                      Complementary Item {item}
+                    </h4>
+                    <p className="text-primary text-sm font-bold mt-1">
+                      $29.99
+                    </p>
                   </div>
                 ))}
               </div>
@@ -142,7 +169,10 @@ export default function CartPage() {
               </Button>
 
               <Link href="/" passHref>
-                <Button variant="outline" className="w-full bg-gray-700/50 border-gray-600 hover:bg-gray-700">
+                <Button
+                  variant="outline"
+                  className="w-full bg-gray-700/50 border-gray-600 hover:bg-gray-700"
+                >
                   <ShoppingBag className="mr-2 h-5 w-5" />
                   Continue Shopping
                 </Button>
@@ -164,5 +194,5 @@ export default function CartPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
