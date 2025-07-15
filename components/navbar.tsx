@@ -59,7 +59,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4 ml-auto">
-            <Link href="/Courses" passHref>
+            <Link href="/courses" passHref>
               <Button
                 variant="outline"
                 size="sm"

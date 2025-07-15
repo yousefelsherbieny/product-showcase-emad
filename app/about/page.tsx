@@ -82,27 +82,29 @@ export default function AboutPage() {
       </div>
 
       {/* Hero / Intro */}
-      <section className="py-20 px-4 relative z-10 backdrop-blur-md">
+      <section className="py-17 px-4 relative z-10 backdrop-blur-md">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* photo */}
-          <div className="relative">
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-400 to-purple-600 mx-auto max-w-md">
-              {!imgErr ? (
-                <Image
-                  src="/Mr.jpeg"
-                  alt="Abdallah Hosny"
-                  fill
-                  className="object-cover"
-                  onError={() => setImgErr(true)}
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-4xl font-bold">AE</span>
-                </div>
-              )}
-            </div>
+          <div
+            className="
+    relative
+    w-64         /* fixed width: feel free to adjust */
+    h-40         /* ↑ change this to h-36, h-48, or even h-[650px] w-[500px] */
+    mx-auto
+    overflow-hidden
+    rounded-full
+    shadow-2xl
+    bg-gradient-to-br from-blue-400 to-purple-600
+  "
+          >
+            <Image
+              src="/Mr.jpeg"
+              alt="Abdallah Emad"
+              fill
+              className="object-cover"
+              onError={() => setImgErr(true)}
+            />
           </div>
-
           {/* text */}
           <div className="space-y-6">
             <h2 className="text-4xl lg:text-5xl font-bold">
