@@ -2,6 +2,8 @@
 
 import React, { Suspense, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+
 import ImageGallery from "react-image-gallery";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Html, useProgress } from "@react-three/drei";
@@ -12,7 +14,7 @@ import Navbar from "@/components/navbar";
 import AnimatedModel from "./AnimatedModel";
 
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Heart, Speech } from "lucide-react";
+import { ShoppingBag, Heart, Speech, ArrowLeft } from "lucide-react";
 
 /* ---------------------------------------------------------------------- */
 /* Product catalogue — each item now has                                   
@@ -161,7 +163,18 @@ const ProductDetailsPage = () => {
       <Navbar />
 
       <div className="container mx-auto px-6 py-12 relative z-10 pt-24 space-y-12">
-        {/* gallery + 3-D viewer */}
+        {/* 1️⃣ Back to Characters button */}
+        <div className="flex items-center mb-8 max-w-6xl mx-auto">
+          <Link
+            href="/Character"
+            className="flex items-center text-gray-300 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="mr-2 h-5 w-5" />
+            <span>Back to Characters</span>
+          </Link>
+        </div>
+
+        {/* 2️⃣ Gallery + 3-D viewer */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           <div className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl shadow-lg">
             <ImageGallery items={images} showPlayButton={false} />
@@ -183,12 +196,12 @@ const ProductDetailsPage = () => {
           </div>
         </div>
 
-        {/* info + buttons */}
+        {/* 3️⃣ Info + action buttons */}
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
           <div className="space-y-4">
             <h1 className="text-3xl font-bold">{product.name}</h1>
             <p className="text-gray-400 text-sm">
-              Premium smartwatch with advanced features
+              Premium 3-D animated character
             </p>
             <p className="text-primary text-2xl font-bold">${product.price}</p>
 
@@ -220,9 +233,9 @@ const ProductDetailsPage = () => {
           </div>
         </div>
 
-        {/* description */}
+        {/* 4️⃣ Description */}
         <div className="max-w-6xl mx-auto bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-bold mb-4">Product Description</h2>
+          <h2 className="text-xl font-bold mb-4">Character Description</h2>
           <p className="text-gray-300 text-sm leading-relaxed">
             {product.description}
           </p>

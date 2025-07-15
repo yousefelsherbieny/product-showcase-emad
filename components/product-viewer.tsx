@@ -1,175 +1,179 @@
-"use client"
+"use client";
 
-import { useRef, useState, useEffect } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
-import { OrbitControls, Stage, PresentationControls } from "@react-three/drei"
-import { Suspense } from "react"
-import { Button } from "@/components/ui/button"
-import { Rotate3D, ZoomIn, ZoomOut, RefreshCw } from "lucide-react"
-import type * as THREE from "three"
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
+import { useRef, useState, useEffect, Suspense } from "react";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { OrbitControls, PresentationControls, Stage } from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import type * as THREE from "three";
+import { Button } from "@/components/ui/button";
+import { Rotate3D, ZoomIn, ZoomOut, RefreshCw } from "lucide-react";
 
-// Update the Model component to handle the jacket model more robustly
-function Model({ modelPath }: { modelPath: string }) {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const [modelError, setModelError] = useState(false)
-  const [model, setModel] = useState<THREE.Group | null>(null)
+/* ------------------------------------------------------------------ */
+/* 1.  Default GLB URL lives here                                     */
+const DEFAULT_JACKET_URL =
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jacket-5ubbNEPTyi791kYKsxyo33s45TR5Ti.glb";
 
-  // Use the direct blob URL for the jacket model
-  const jacketModelUrl =
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jacket-5ubbNEPTyi791kYKsxyo33s45TR5Ti.glb"
+/* ------------------------------------------------------------------ */
+/* 2.  Fallback cube (same as before)                                 */
+function FallbackCube() {
+  const mesh = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (mesh.current) {
+      mesh.current.rotation.y = clock.elapsedTime * 0.5;
+      mesh.current.rotation.x = Math.sin(clock.elapsedTime * 0.3) * 0.2;
+    }
+  });
+  return (
+    <mesh ref={mesh}>
+      <boxGeometry args={[2, 3, 0.5]} />
+      <meshStandardMaterial color="#3b82f6" />
+    </mesh>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 3.  Model loader                                                   */
+function GLBModel({ url }: { url: string }) {
+  const [group, setGroup] = useState<THREE.Group>();
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    // Load the model
-    const loader = new GLTFLoader()
+    const loader = new GLTFLoader();
+    let active = true;
     loader.load(
-      jacketModelUrl,
-      (gltf) => {
-        // Success callback
-        setModel(gltf.scene)
-      },
+      url,
+      (gltf) => active && setGroup(gltf.scene),
       undefined,
-      (error) => {
-        // Error callback
-        console.error("Error loading model:", error)
-        setModelError(true)
-      },
-    )
+      () => active && setFailed(true)
+    );
+    return () => (active = false);
+  }, [url]);
 
-    // Cleanup
-    return () => {
-      if (model) {
-        model.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            if (child.geometry) child.geometry.dispose()
-            if (child.material) {
-              if (Array.isArray(child.material)) {
-                child.material.forEach((material) => material.dispose())
-              } else {
-                child.material.dispose()
-              }
-            }
-          }
-        })
-      }
-    }
-  }, [jacketModelUrl])
-
-  // Create a simple rotating cube as fallback
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.5
-      meshRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.3) * 0.2
-    }
-  })
-
-  // If there's an error or we're still loading, render a cube
-  if (modelError || !model) {
-    return (
-      <mesh ref={meshRef} position={[0, 0, 0]} rotation={[0, 0, 0]}>
-        <boxGeometry args={[2, 3, 0.5]} />
-        <meshStandardMaterial color="#3b82f6" />
-      </mesh>
-    )
-  }
-
-  // Otherwise, render the model
-  return <primitive object={model} scale={1} position={[0, 0, 0]} />
+  if (failed || !group) return <FallbackCube />;
+  return <primitive object={group} scale={1} />;
 }
 
-interface ControlsProps {
-  zoomSpeed: number
-  setZoomSpeed: (speed: number) => void
-  resetCamera: () => void
-}
-
-function Controls({ zoomSpeed, setZoomSpeed, resetCamera }: ControlsProps) {
+/* ------------------------------------------------------------------ */
+/* 4.  Zoom / reset bar                                               */
+function ControlsBar({
+  zoom,
+  setZoom,
+  reset,
+}: {
+  zoom: number;
+  setZoom: (n: number) => void;
+  reset: () => void;
+}) {
   return (
-    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white/80 backdrop-blur-sm p-2 rounded-lg shadow-md z-10">
+    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow z-10">
       <Button
         size="sm"
         variant="outline"
-        onClick={() => setZoomSpeed(zoomSpeed + 0.5)}
-        className="w-10 h-10 p-0 rounded-full"
-        aria-label="Zoom in"
+        className="w-9 h-9 p-0 rounded-full"
+        onClick={() => setZoom(zoom + 0.5)}
       >
         <ZoomIn size={18} />
       </Button>
-
       <Button
         size="sm"
         variant="outline"
-        onClick={() => setZoomSpeed(Math.max(0.5, zoomSpeed - 0.5))}
-        className="w-10 h-10 p-0 rounded-full"
-        aria-label="Zoom out"
+        className="w-9 h-9 p-0 rounded-full"
+        onClick={() => setZoom(Math.max(0.5, zoom - 0.5))}
       >
         <ZoomOut size={18} />
       </Button>
-
       <Button
         size="sm"
         variant="outline"
-        onClick={resetCamera}
-        className="w-10 h-10 p-0 rounded-full"
-        aria-label="Reset view"
+        className="w-9 h-9 p-0 rounded-full"
+        onClick={reset}
       >
         <RefreshCw size={18} />
       </Button>
     </div>
-  )
+  );
 }
 
-// Update the ProductViewer component to use the direct blob URL
-export default function ProductViewer({ modelPath }: { modelPath: string }) {
-  const [zoomSpeed, setZoomSpeed] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const controlsRef = useRef<OrbitControls>(null)
+/* ------------------------------------------------------------------ */
+/* 5.  ProductViewer component                                        */
+export default function ProductViewer({
+  modelPath = DEFAULT_JACKET_URL /* 👈 default value */,
+}: {
+  modelPath?: string;
+}) {
+  const [zoom, setZoom] = useState(1);
+  const controlsRef = useRef<OrbitControls>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Hide loading indicator after a delay
+  /* disable wheel when pointer outside viewer */
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+    const onWheel = (e: WheelEvent) => {
+      const inside = wrapperRef.current?.contains(e.target as Node);
+      if (controlsRef.current) controlsRef.current.enabled = !!inside;
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, []);
 
-  const resetCamera = () => {
-    if (controlsRef.current) {
-      controlsRef.current.reset()
-    }
-  }
+  const resetCam = () => controlsRef.current?.reset();
 
   return (
-    <div className="w-full h-full relative group">
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white z-10 opacity-100 animate-fadeOut pointer-events-none">
-          <div className="w-16 h-16 border-4 border-t-primary border-b-primary rounded-full animate-spin"></div>
-        </div>
-      )}
+    <div ref={wrapperRef} className="w-full h-full relative">
+      {/* drag tooltip */}
+      <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded shadow text-gray-600 z-10">
+        <Rotate3D className="h-5 w-5 inline mr-1" />
+        <span className="text-xs">Drag to rotate</span>
+      </div>
 
       <Suspense fallback={null}>
-        <Canvas shadows camera={{ position: [0, 0, 5], fov: 50 }}>
+        <Canvas
+          frameloop="demand"
+          shadows
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0, 5], fov: 50 }}
+          className="absolute inset-0"
+          style={{ transform: "translateZ(0)" }} /* gpu layer */
+        >
           <PresentationControls
             global
-            zoom={zoomSpeed}
-            rotation={[0, 0, 0]}
+            zoom={zoom}
+            config={{ mass: 1, tension: 120, friction: 14 }}
             polar={[-Math.PI / 3, Math.PI / 3]}
             azimuth={[-Math.PI / 1.4, Math.PI / 1.4]}
           >
-            <Stage environment="city" intensity={0.6}>
-              <Model modelPath={modelPath} />
+            <Stage environment="city" intensity={0.6} shadows={false}>
+              <GLBModel url={modelPath} />
             </Stage>
           </PresentationControls>
-          <OrbitControls ref={controlsRef} enableZoom={true} enablePan={false} minDistance={2} maxDistance={8} />
+
+          <OrbitControls
+            ref={controlsRef}
+            enablePan={false}
+            enableZoom
+            minDistance={2}
+            maxDistance={8}
+          />
+
+          <InvalidateOnControls controlsRef={controlsRef} />
         </Canvas>
       </Suspense>
 
-      <Controls zoomSpeed={zoomSpeed} setZoomSpeed={setZoomSpeed} resetCamera={resetCamera} />
+      <ControlsBar zoom={zoom} setZoom={setZoom} reset={resetCam} />
 
-      <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded-lg shadow-md">
-        <Rotate3D className="h-5 w-5 text-gray-600" />
-        <span className="text-xs text-gray-600 block mt-1">Drag to rotate</span>
-      </div>
-
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/20 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     </div>
-  )
+  );
+}
+
+/* helper */
+function InvalidateOnControls({
+  controlsRef,
+}: {
+  controlsRef: React.RefObject<OrbitControls>;
+}) {
+  const invalidate = useThree((s) => s.invalidate);
+  useFrame(() => {
+    if (controlsRef.current && controlsRef.current.update()) invalidate();
+  });
+  return null;
 }
