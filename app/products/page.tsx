@@ -8,11 +8,15 @@ import { ArrowLeft } from "lucide-react";
 import Navbar from "@/components/navbar";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import ProductModelCard from "@/components/product-model-card";
+import { useCart } from "@/lib/CartContext";
+import { Button } from "@/components/ui/button";
 
 export default function ProductsPage() {
+  const { addToCart } = useCart();
+
   const products = [
     {
-      id: "1",
+      id: "7",
       name: "Premium Smartwatch",
       price: "$199.99",
       description:
@@ -20,9 +24,10 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/smartwatch%28glb%29-xlWo8178XSp1RMszLSzazCmmQNpkym.glb",
       modelType: "smartwatch",
+      image: ["/images/product-blue.jpeg"],
     },
     {
-      id: "2",
+      id: "8",
       name: "JBL Wireless Speaker",
       price: "$149.99",
       description:
@@ -30,9 +35,10 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jbl%20speaker%28glb%291-gTNzgjjsH94jqjegL1FNvvBjjCBoti.glb",
       modelType: "speaker",
+      image: ["/images/product-pink.jpeg"],
     },
     {
-      id: "3",
+      id: "9",
       name: "Urban Jacket",
       price: "$249.99",
       description:
@@ -40,9 +46,10 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jacket-5ubbNEPTyi791kYKsxyo33s45TR5Ti.glb",
       modelType: "jacket",
+      image: ["/images/product-blue.jpeg"],
     },
     {
-      id: "4",
+      id: "10",
       name: "Ceramic Mug",
       price: "$24.99",
       description:
@@ -50,9 +57,10 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mug-BivPFFfCD2ohHqrX8QLYUs7IfC9NJr.glb",
       modelType: "mug",
+      image: ["/images/product-pink.jpeg"],
     },
     {
-      id: "5",
+      id: "11",
       name: "Water Bottle",
       price: "$29.99",
       description:
@@ -60,9 +68,10 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/plastic%20water%20bottle%20-Uoj1aA8VEzLSwKeeruBEzNE2Aabm2H.glb",
       modelType: "bottle",
+      image: ["/images/product-blue.jpeg"],
     },
     {
-      id: "6",
+      id: "12",
       name: "Notebook",
       price: "$19.99",
       description:
@@ -70,6 +79,7 @@ export default function ProductsPage() {
       modelUrl:
         "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/notebook-Hl6smPi3eG0MqLOgVzbp3bOnAnGLq6.glb",
       modelType: "notebook",
+      image: ["/images/product-pink.jpeg"],
     },
   ];
 
@@ -126,6 +136,7 @@ export default function ProductsPage() {
                   duration: 0.5,
                   delay: Number.parseInt(product.id) * 0.1,
                 }}
+                className="bg-gray-800/40 rounded-xl shadow-xl p-4 flex flex-col justify-between"
               >
                 <Link href={`/products/${product.id}`} className="block h-full">
                   <ProductModelCard
@@ -136,6 +147,24 @@ export default function ProductsPage() {
                     modelType={product.modelType}
                   />
                 </Link>
+
+                <Button
+                  className="mt-4 w-full"
+                  onClick={() => {
+                    const priceNumber = parseFloat(
+                      product.price.replace("$", "")
+                    );
+                    addToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: priceNumber,
+                      image: product.image[0],
+                      quantity: 1,
+                    });
+                  }}
+                >
+                  Add to Cart
+                </Button>
               </motion.div>
             ))}
           </div>

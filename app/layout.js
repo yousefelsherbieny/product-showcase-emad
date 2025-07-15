@@ -1,14 +1,16 @@
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { CartProvider } from "@/lib/CartContext"; // ✅ استيراد مزود السلة
+import { Toaster } from "react-hot-toast";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Premium Product Showcase",
   description: "Interactive product showcase with advanced animations",
-    generator: 'v0.dev'
-}
+  generator: "v0.dev",
+};
 
 export default function RootLayout({ children }) {
   return (
@@ -21,11 +23,15 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          {children}
+          <CartProvider>
+            {/* ✅ إشعارات التوست */}
+            <Toaster position="top-right" reverseOrder={false} />
+            
+            {children}
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
-
 

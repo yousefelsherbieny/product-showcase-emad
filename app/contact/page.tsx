@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Mail,
   Phone,
@@ -13,7 +12,6 @@ import {
   CheckCircle,
   ArrowLeft,
 } from "lucide-react";
-
 import Navbar from "@/components/navbar";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import { Button } from "@/components/ui/button";
@@ -21,65 +19,31 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-/* ------------------------------------------------------------------ */
-/* helper data                                                        */
 const contactMethods = [
   {
-    icon: <Mail className="w-6 h-6 text-blue-600" />,
+    icon: <Mail className="w-5 h-5 text-blue-500" />,
     title: "Email Us",
     desc: "Send us an email anytime",
     contact: "hello@swagifyy.com",
     action: "mailto:hello@swagifyy.com",
   },
   {
-    icon: <Phone className="w-6 h-6 text-green-600" />,
+    icon: <Phone className="w-5 h-5 text-green-500" />,
     title: "Call Us",
-    desc: "Mon‑Fri from 9 am to 6 pm",
-    contact: "+1 (555) 123‑4567",
+    desc: "Mon–Fri from 9 am to 6 pm",
+    contact: "+1 (555) 123‑4567",
     action: "tel:+15551234567",
   },
   {
-    icon: <MapPin className="w-6 h-6 text-red-600" />,
+    icon: <MapPin className="w-5 h-5 text-red-500" />,
     title: "Visit Us",
     desc: "Come say hello at our office",
-    contact: "123 Business St, New York, NY 10001",
+    contact: "123 Business St, New York, NY 10001",
     action: "https://maps.google.com",
   },
-  {
-    icon: <MessageCircle className="w-6 h-6 text-purple-600" />,
-    title: "Live Chat",
-    desc: "Chat with our team",
-    contact: "Available 24/7",
-    action: "#",
-  },
 ];
 
-const faqs = [
-  {
-    q: "What's your typical turnaround time?",
-    a: "Most custom products are completed within 7‑14 business days, depending on complexity and quantity.",
-  },
-  {
-    q: "Do you offer bulk discounts?",
-    a: "Yes! We offer competitive pricing for bulk orders. Contact us for a custom quote based on your needs.",
-  },
-  {
-    q: "Can I see a sample before placing a large order?",
-    a: "We can provide samples for most products. Sample costs are often credited toward your final order.",
-  },
-  {
-    q: "What file formats do you accept for designs?",
-    a: "We accept AI, EPS, PDF, PNG, and JPG files. For best results, vector files (AI, EPS) are preferred.",
-  },
-  {
-    q: "Do you ship internationally?",
-    a: "Yes, we ship worldwide! Shipping costs and delivery times vary by location. Contact us for specific rates.",
-  },
-];
-
-/* ------------------------------------------------------------------ */
 export default function ContactPage() {
-  /* form state ----------------------------------------------------- */
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -89,14 +53,12 @@ export default function ContactPage() {
   const [submitting, setSub] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm({ ...form, [e.target.name]: e.target.value });
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setSub(true);
-    await new Promise((r) => setTimeout(r, 1500)); // simulate API
+    await new Promise((r) => setTimeout(r, 1500));
     setSub(false);
     setSent(true);
     setTimeout(() => {
@@ -105,50 +67,32 @@ export default function ContactPage() {
     }, 3000);
   };
 
-  /* render --------------------------------------------------------- */
   return (
-    <main className="relative min-h-screen to-purple-600">
-      {/* background */}
+    <main className="relative min-h-screen text-white">
       <div className="fixed inset-0 z-0">
         <ObjectParticles count={40} background="#111827" />
-        <div className="absolute inset-0 bg-gradient-to-b to-purple-600 via-transparent to-gray-900/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/80 pointer-events-none" />
       </div>
 
       <Navbar />
 
-      {/* back‑to‑home header bar */}
-      <div className="container mx-auto px-6 pt-24 relative z-10">
-        <div className="flex items-center mb-8">
-          <Link
-            href="/"
-            className="flex items-center to-purple-600 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="mr-2 h-5 w-5" />
-            <span>Back to Home</span>
-          </Link>
-          <h1 className="text-3xl font-bold ml-auto">Contact Us</h1>
-        </div>
-      </div>
-
-      {/* hero */}
-      <section className="py-12 px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">
-            Get in <span className="text-primary">Touch</span>
-          </h2>
-          <p className="text-lg to-purple-600 ">
-            Ready to bring your brand to life? We'd love to hear from you.
-          </p>
-        </div>
+      <section className="pt-32 pb-16 relative z-10 text-center">
+        <h1 className="text-5xl font-bold text-white mb-4">
+          Contact <span className="text-primary">Us</span>
+        </h1>
+        <p className="text-gray-300 max-w-xl mx-auto">
+          Let’s bring your ideas to life. We’re always happy to hear from you.
+        </p>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 pb-20 relative z-10">
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* -------------------- form -------------------- */}
+        <div className="grid lg:grid-cols-3 gap-10">
           <div className="lg:col-span-2">
-            <Card className="to-purple-600 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Send us a message</CardTitle>
+            <Card className="bg-gray-900/60 backdrop-blur p-6 rounded-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-white text-xl">
+                  Send us a message
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {sent ? (
@@ -157,14 +101,15 @@ export default function ContactPage() {
                     <h3 className="text-2xl font-semibold mb-2">
                       Message Sent!
                     </h3>
-                    <p className="to-purple-600">
-                      We’ll get back to you within 24 hours.
+                    <p className="text-gray-400">
+                      We’ll get back to you within 24 hours.
                     </p>
                   </div>
                 ) : (
                   <form onSubmit={onSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-4">
                       <Input
+                        className="bg-gray-800 text-white"
                         name="name"
                         required
                         placeholder="Full name"
@@ -172,6 +117,7 @@ export default function ContactPage() {
                         onChange={onChange}
                       />
                       <Input
+                        className="bg-gray-800 text-white"
                         name="email"
                         required
                         placeholder="Email"
@@ -180,6 +126,7 @@ export default function ContactPage() {
                       />
                     </div>
                     <Input
+                      className="bg-gray-800 text-white"
                       name="subject"
                       required
                       placeholder="Subject"
@@ -187,6 +134,7 @@ export default function ContactPage() {
                       onChange={onChange}
                     />
                     <Textarea
+                      className="bg-gray-800 text-white"
                       name="message"
                       required
                       rows={6}
@@ -213,21 +161,20 @@ export default function ContactPage() {
             </Card>
           </div>
 
-          {/* -------------------- contact cards -------------------- */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {contactMethods.map(({ icon, title, desc, contact, action }) => (
               <Card
                 key={title}
-                className="to-purple-600 backdrop-blur-sm hover:shadow-md transition-shadow"
+                className="bg-gray-900/50 backdrop-blur p-4 rounded-lg shadow-md hover:shadow-lg transition"
               >
-                <CardContent className="p-4 flex items-start space-x-4">
-                  {icon}
+                <CardContent className="flex items-start space-x-4">
+                  <div className="p-2 bg-white rounded-full">{icon}</div>
                   <div>
-                    <h3 className="font-semibold">{title}</h3>
+                    <h3 className="font-semibold text-white">{title}</h3>
                     <p className="text-sm text-gray-300">{desc}</p>
                     <a
                       href={action}
-                      className="text-primary hover:underline text-sm"
+                      className="text-blue-400 hover:underline text-sm"
                     >
                       {contact}
                     </a>
@@ -236,13 +183,13 @@ export default function ContactPage() {
               </Card>
             ))}
 
-            <Card className="to-purple-600 backdrop-blur-sm">
+            <Card className="bg-gray-800 p-4 rounded-lg">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Clock size={18} className="mr-2" /> Business Hours
+                <CardTitle className="flex items-center text-white">
+                  <Clock size={18} className="mr-2" /> Business Hours
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm">
+              <CardContent className="text-sm text-gray-300 space-y-2">
                 <div className="flex justify-between">
                   <span>Mon‑Fri</span>
                   <span>9 am – 6 pm</span>
@@ -259,43 +206,6 @@ export default function ContactPage() {
             </Card>
           </div>
         </div>
-
-        {/* -------------------- FAQ -------------------- */}
-        <section className="mt-20">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {faqs.map(({ q, a }) => (
-              <Card
-                key={q}
-                className="to-purple-600 backdrop-blur-sm hover:shadow-md transition-shadow"
-              >
-                <CardContent className="p-6">
-                  <h3 className="font-semibold mb-3">{q}</h3>
-                  <p className="text-gray-300">{a}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* -------------------- CTA -------------------- */}
-        <section className="mt-20 text-center">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12">
-            <h2 className="text-3xl font-bold mb-4">Still have questions?</h2>
-            <p className="text-blue-100 mb-8">
-              Don't hesitate to reach out. We're here to help.
-            </p>
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white text-blue-600 hover:bg-gray-100"
-            >
-              Schedule a Call
-            </Button>
-          </div>
-        </section>
       </div>
     </main>
   );

@@ -12,10 +12,12 @@ import ProductDetailViewer from "@/components/product-detail-viewer";
 import ColorPicker from "@/components/color-picker";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import { useCart } from "@/lib/CartContext";
+import toast from "react-hot-toast";
 
 const productsData = [
   {
-    id: "1",
+    id: "7",
     name: "Premium Smartwatch",
     price: "$199.99",
     description:
@@ -36,14 +38,14 @@ const productsData = [
       "Notification alerts",
       "7-day battery life",
     ],
-     images: [
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
     ],
   },
   {
-    id: "2",
+    id: "8",
     name: "JBL Wireless Speaker",
     price: "$149.99",
     description:
@@ -64,19 +66,20 @@ const productsData = [
       "Built-in microphone",
       "Multi-speaker pairing",
     ],
-         images: [
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
     ],
   },
   {
-    id: "3",
+    id: "9",
     name: "Urban Jacket",
     price: "$249.99",
     description:
       "Stay stylish and comfortable with our premium urban jacket, perfect for any weather condition. Features water-resistant material, adjustable hood, and multiple pockets.",
-    modelUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jacket-5ubbNEPTyi791kYKsxyo33s45TR5Ti.glb",
+    modelUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/jacket-5ubbNEPTyi791kYKsxyo33s45TR5Ti.glb",
     modelType: "jacket",
     colors: [
       { id: "blue", name: "Blue", hex: "#3b82f6" },
@@ -91,19 +94,20 @@ const productsData = [
       "Breathable fabric",
       "Machine washable",
     ],
-         images: [
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
     ],
   },
   {
-    id: "4",
+    id: "10",
     name: "Ceramic Mug",
     price: "$24.99",
     description:
       "Premium ceramic mug with elegant design, perfect for your morning coffee or tea. Microwave and dishwasher safe with a comfortable handle and non-slip base.",
-    modelUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mug-BivPFFfCD2ohHqrX8QLYUs7IfC9NJr.glb",
+    modelUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/mug-BivPFFfCD2ohHqrX8QLYUs7IfC9NJr.glb",
     modelType: "mug",
     colors: [
       { id: "white", name: "White", hex: "#ffffff" },
@@ -111,8 +115,14 @@ const productsData = [
       { id: "purple", name: "Purple", hex: "#8b5cf6" },
       { id: "pink", name: "Pink", hex: "#ec4899" },
     ],
-    features: ["Microwave safe", "Dishwasher safe", "12oz capacity", "Ergonomic handle", "Non-slip base"],
-           images: [
+    features: [
+      "Microwave safe",
+      "Dishwasher safe",
+      "12oz capacity",
+      "Ergonomic handle",
+      "Non-slip base",
+    ],
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
@@ -120,7 +130,7 @@ const productsData = [
   },
 
   {
-    id: "5",
+    id: "11",
     name: "Water Bottle",
     price: "$29.99",
     description:
@@ -141,19 +151,20 @@ const productsData = [
       "750ml capacity",
       "Easy-carry handle",
     ],
-         images: [
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
     ],
   },
   {
-    id: "6",
+    id: "12",
     name: "Notebook",
     price: "$19.99",
     description:
       "Premium quality notebook with smooth paper, perfect for sketching, journaling, or taking notes. Features durable binding and acid-free paper.",
-    modelUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/notebook-Hl6smPi3eG0MqLOgVzbp3bOnAnGLq6.glb",
+    modelUrl:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/notebook-Hl6smPi3eG0MqLOgVzbp3bOnAnGLq6.glb",
     modelType: "notebook",
     colors: [
       { id: "black", name: "Black", hex: "#222222" },
@@ -161,15 +172,20 @@ const productsData = [
       { id: "pink", name: "Pink", hex: "#ec4899" },
       { id: "brown", name: "Brown", hex: "#92400e" },
     ],
-    features: ["200 acid-free pages", "Durable binding", "Elastic closure", "Inner pocket", "Bookmark ribbon"],
-         images: [
+    features: [
+      "200 acid-free pages",
+      "Durable binding",
+      "Elastic closure",
+      "Inner pocket",
+      "Bookmark ribbon",
+    ],
+    images: [
       "/images/product-blue.jpeg",
       "/images/product-pink.jpeg",
       "/images/product-purple.jpeg",
     ],
   },
-  
-]
+];
 
 export default function ProductDetailPage() {
   const router = useRouter();
@@ -177,6 +193,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+const { addToCart } = useCart();
 
   useEffect(() => {
     const foundProduct = productsData.find((p) => p.id === id);
@@ -211,7 +228,10 @@ export default function ProductDetailPage() {
 
       <div className="container mx-auto px-6 py-12 relative z-10 pt-24">
         <div className="flex items-center mb-8">
-          <Link href="/products" className="flex items-center text-gray-300 hover:text-white transition-colors">
+          <Link
+            href="/products"
+            className="flex items-center text-gray-300 hover:text-white transition-colors"
+          >
             <ArrowLeft className="mr-2 h-5 w-5" />
             <span>Back to Products</span>
           </Link>
@@ -225,7 +245,10 @@ export default function ProductDetailPage() {
             className="bg-gray-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg"
           >
             <ImageGallery
-              items={product.images.map((img) => ({ original: img, thumbnail: img }))}
+              items={product.images.map((img) => ({
+                original: img,
+                thumbnail: img,
+              }))}
               showPlayButton={false}
             />
           </motion.div>
@@ -252,13 +275,19 @@ export default function ProductDetailPage() {
         >
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <p className="text-2xl font-bold text-primary mb-4">{product.price}</p>
+            <p className="text-2xl font-bold text-primary mb-4">
+              {product.price}
+            </p>
             <p className="text-gray-300 mb-6">{product.description}</p>
           </div>
 
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Select Color:</h3>
-            <ColorPicker colors={product.colors} activeColor={activeColor} onChange={handleColorChange} />
+            <ColorPicker
+              colors={product.colors}
+              activeColor={activeColor}
+              onChange={handleColorChange}
+            />
           </div>
 
           <div className="space-y-4">
@@ -274,7 +303,22 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button size="lg" className="flex-1">
+            <Button
+              size="lg"
+              className="flex-1"
+              onClick={() => {
+                const numericPrice = parseFloat(product.price.replace("$", "")); // نحول السعر من نص لرقم
+
+                // أضف المنتج للسلة
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: numericPrice,
+                  image: product.images[0],
+                  quantity: 1,
+                });
+              }}
+            >
               <ShoppingBag className="mr-2 h-5 w-5" />
               Add to Cart
             </Button>

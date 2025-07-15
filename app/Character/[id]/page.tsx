@@ -15,6 +15,7 @@ import AnimatedModel from "./AnimatedModel";
 
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Heart, Speech, ArrowLeft } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
 
 /* ---------------------------------------------------------------------- */
 /* Product catalogue — each item now has                                   
@@ -143,6 +144,7 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
   const product = products[id as string];
   const [active, setActive] = useState(false); // false = Idle, true = secondClip
+const { addToCart } = useCart();
 
   if (!product)
     return <div className="text-white p-10">Product not found.</div>;
@@ -206,10 +208,23 @@ const ProductDetailsPage = () => {
             <p className="text-primary text-2xl font-bold">${product.price}</p>
 
             <div className="flex flex-col sm:flex-row gap-2">
-              <Button size="lg" className="flex-1">
+              <Button
+                size="lg"
+                className="flex-1"
+                onClick={() =>
+                  addToCart({
+                    id: id as string,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images[0], // أول صورة
+                    quantity: 1,
+                  })
+                }
+              >
                 <ShoppingBag className="mr-2 h-5 w-5" />
                 Add to Cart
               </Button>
+
               <Button
                 variant="outline"
                 size="lg"
