@@ -27,6 +27,7 @@ import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
 import ExplodingGrid from "@/components/ExplodingGrid";
 import HorizontalScrollSection from "@/components/HorizontalScrollSection";
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const [activeColor, setActiveColor] = useState("blue");
