@@ -1,94 +1,85 @@
-// components/HorizontalScrollSection.tsx
+/* components/HorizontalScrollSection.tsx */
 "use client";
 
-import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger"; //  👈 note the default import
-// import ScrollTrigger from "gsap-trial/ScrollTrigger";
-// import ScrollTrigger from "gsap/src/ScrollTrigger";
-// 🔥 Register plugin at module‐scope so it's known before any gsap calls
-gsap.registerPlugin(ScrollTrigger);
+import React, { useRef, useLayoutEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const labels = ["Part One", "Part Two", "Part Three", "Part Four"];
+if (typeof window !== "undefined" && !gsap.core.globals().ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const panels = [
+  { id: 1, label: "Part One", bg: "bg-violet-700 text-white", large: true },
+  { id: 2, label: "Part Two", bg: "bg-black text-white" },
+  { id: 3, label: "Part Three", bg: "bg-gray-200 text-gray-900" },
+  { id: 4, label: "Part Four", bg: "bg-violet-700 text-white", large: true },
+];
 
 export default function HorizontalScrollSection() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const panelsRef = useRef<HTMLDivElement[]>([]);
+  const wrap = useRef<HTMLDivElement>(null);
+  const items = useRef<HTMLDivElement[]>([]);
 
-  useEffect(() => {
-    // make sure we're in the browser
-    if (typeof window === "undefined") return;
+  useLayoutEffect(() => {
+    if (!wrap.current) return;
 
-    const wrapper = wrapperRef.current;
-    const panels = panelsRef.current.filter(Boolean);
-    if (!wrapper || panels.length === 0) return;
+    const total =
+      items.current.reduce((sum, el) => sum + el.offsetWidth, 0) -
+      window.innerWidth;
 
-    // calculate total scroll width
-    let totalW = 0;
-    const calc = () => {
-      totalW = panels.reduce((sum, el) => sum + el.offsetWidth, 0);
-    };
-    calc();
-    ScrollTrigger.addEventListener("refreshInit", calc);
-
-    // horizontal scrub animation
-    gsap.to(panels, {
-      x: () => `-${totalW - window.innerWidth}`,
+    /* master tween */
+    gsap.to(items.current, {
+      x: -total,
       ease: "none",
       scrollTrigger: {
-        trigger: wrapper,
+        trigger: wrap.current,
         pin: true,
         scrub: true,
-        end: () => `+=${totalW}`,
+        anticipatePin: 1,
+        end: `+=${total}`,
         invalidateOnRefresh: true,
       },
     });
 
-    // toggle active class
-    panels.forEach((panel) => {
+    /* active state */
+    items.current.forEach((el) => {
       ScrollTrigger.create({
-        trigger: panel,
-        start: () => `top top-=${panel.offsetLeft - window.innerWidth / 2}`,
-        end: () => `+=${panel.offsetWidth}`,
-        toggleClass: { targets: panel, className: "active" },
+        trigger: el,
+        start: () =>
+          `top top-=${
+            (el.offsetLeft - window.innerWidth / 2) *
+            (total / (total - window.innerWidth))
+          }`,
+        end: () =>
+          `+=${el.offsetWidth * (total / (total - window.innerWidth))}`,
+        onToggle: (self) =>
+          el.classList[self.isActive ? "add" : "remove"](
+            "ring-8",
+            "ring-primary"
+          ),
       });
     });
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+    return () => ScrollTrigger.getAll().forEach((st) => st.kill());
   }, []);
 
   return (
-    <section className="relative overflow-hidden">
-      <div ref={wrapperRef} className="flex flex-nowrap overflow-x-hidden">
-        {labels.map((text, i) => (
+    <section ref={wrap} className="relative w-full overflow-x-hidden">
+      <div className="flex flex-nowrap">
+        {panels.map((p, i) => (
           <div
-            key={i}
+            key={p.id}
             ref={(el) => {
-              if (el) panelsRef.current[i] = el;
+              if (el) items.current[i] = el;
             }}
-            className={`
-              flex-shrink-0 
-              h-screen flex items-center justify-center 
-              text-[5rem] font-black 
-              transition-colors duration-300
-              ${i === 1 ? "bg-black text-white w-[46rem]" : ""}
-              ${i === 2 ? "w-[46rem]" : ""}
-              ${i === 0 || i === 3 ? "w-screen bg-[#8d3dae] text-white" : ""}
-            `}
+            className={`${p.bg} flex-shrink-0 h-screen flex items-center
+              justify-center font-extrabold text-[8vw] 
+              ${p.large ? "w-screen" : "w-[46rem]"}`}
           >
-            {text}
+            {p.label}
           </div>
         ))}
       </div>
-
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-red-500 pointer-events-none" />
-
-      <style jsx>{`
-        /* when a panel is in the center, give it a highlight */
-        .active {
-          color: #baff00 !important;
-        }
-      `}</style>
     </section>
   );
 }

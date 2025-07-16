@@ -35,7 +35,7 @@ export default function CoursesPage() {
       <Navbar />
 
       <main className="flex-grow container mx-auto px-6 pt-32 pb-20">
-        {/* Header Section */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-12">
           <Link
             href="/"
@@ -53,19 +53,20 @@ export default function CoursesPage() {
               key={c.id}
               className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 rounded-2xl overflow-hidden shadow-xl transition-transform hover:-translate-y-1 hover:shadow-2xl duration-300"
             >
+              {/* Image + Price */}
               <div className="relative h-56 w-full overflow-hidden">
                 <Image
                   src={c.image}
                   alt={c.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-t-2xl"
+                  fill
+                  className="object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow">
                   {c.price}
                 </div>
               </div>
 
+              {/* Info + CTAs */}
               <div className="p-6 space-y-4">
                 <p className="text-xs text-purple-400 uppercase tracking-widest">
                   {c.category}
@@ -73,13 +74,19 @@ export default function CoursesPage() {
                 <h2 className="text-lg font-semibold leading-snug">
                   {c.title}
                 </h2>
+
                 <div className="flex gap-4 pt-4">
                   <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium text-sm">
                     Buy Now
                   </button>
-                  <button className="flex-1 border border-gray-600 bg-transparent hover:bg-gray-800 text-white py-2 rounded-lg font-medium text-sm">
+
+                  {/* THIS is the updated Link: */}
+                  <Link
+                    href={`/courses/${c.id}`}
+                    className="flex-1 border border-gray-600 bg-transparent hover:bg-gray-800 text-white py-2 rounded-lg font-medium text-sm text-center"
+                  >
                     Learn More
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
