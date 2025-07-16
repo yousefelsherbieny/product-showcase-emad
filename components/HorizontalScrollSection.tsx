@@ -3,8 +3,9 @@
 
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger"; //  👈 note the default import
-
+// import ScrollTrigger from "gsap/ScrollTrigger"; //  👈 note the default import
+// import ScrollTrigger from "gsap-trial/ScrollTrigger";
+import ScrollTrigger from "gsap/src/ScrollTrigger";
 // 🔥 Register plugin at module‐scope so it's known before any gsap calls
 gsap.registerPlugin(ScrollTrigger);
 
