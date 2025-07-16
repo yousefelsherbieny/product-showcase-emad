@@ -4,9 +4,6 @@ import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// register the ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
-
 const labels = ["Part One", "Part Two", "Part Three", "Part Four"];
 
 export default function HorizontalScrollSection() {
@@ -14,6 +11,11 @@ export default function HorizontalScrollSection() {
   const sectionsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
+    // Register plugin inside useEffect (client-side only)
+    gsap.registerPlugin(ScrollTrigger);
+
+    console.log("GSAP:", gsap, "ScrollTrigger:", ScrollTrigger);
+
     const wrapper = wrapperRef.current;
     const sections = sectionsRef.current.filter(Boolean);
     if (!wrapper || sections.length === 0) return;
