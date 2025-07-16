@@ -25,6 +25,8 @@ import FloatingText from "@/components/floating-text";
 import TextScramble from "@/components/text-scramble";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
+import ExplodingGrid from "@/components/ExplodingGrid";
+import HorizontalScrollSection from "@/components/HorizontalScrollSection";
 
 export default function Home() {
   const [activeColor, setActiveColor] = useState("blue");
@@ -284,7 +286,8 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
+      <ExplodingGrid />
+      <HorizontalScrollSection />
       {/* ------------------ 3‑D Product / Jacket slice -------------- */}
       <section className="w-full relative z-10 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
         <div className="w-full px-0">
