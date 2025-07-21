@@ -18,7 +18,7 @@ export default function ProductsPage() {
     {
       id: "7",
       name: "Premium Smartwatch",
-      price: "$199.99",
+      price: "$0.99",
       description:
         "Track your fitness, receive notifications, and stay connected with our premium smartwatch.",
       modelUrl:

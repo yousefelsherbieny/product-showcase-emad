@@ -17,19 +17,38 @@ import Navbar from "@/components/navbar";
 import { useCart } from "@/lib/CartContext";
 
 export default function CartPage() {
-  const {
-    cart,
-    increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
-  } = useCart();
+  const { cart, increaseQuantity, decreaseQuantity, removeFromCart } =
+    useCart();
 
   const getSubtotal = () =>
     cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const subtotal = getSubtotal();
-  const tax = subtotal * 0.08;
+  const tax = subtotal * 0.0;
   const total = subtotal + tax;
+  const handleCheckout = async () => {
+  try {
+    const response = await fetch("/api/paymob-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cart }),
+    });
+
+    const data = await response.json();
+
+    console.log("Paymob response:", data); // 👈 اطبع النتيجة
+
+    if (data?.payment_url) {
+      window.location.href = data.payment_url;
+    } else {
+      alert("حدث خطأ أثناء تجهيز الدفع. \n" + JSON.stringify(data));
+    }
+  } catch (err) {
+    console.error("Checkout Error:", err);
+    alert("فشل الاتصال بـ Paymob.");
+  }
+};
+
 
   return (
     <main className="relative min-h-screen bg-gray-900 text-white">
@@ -150,7 +169,10 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <Button className="w-full mb-3 bg-primary hover:bg-primary/90">
+              <Button
+                onClick={handleCheckout}
+                className="w-full mb-3 bg-primary hover:bg-primary/90"
+              >
                 <CreditCard className="mr-2 h-5 w-5" />
                 Checkout
               </Button>
