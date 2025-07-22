@@ -13,6 +13,17 @@ export async function POST(req: NextRequest) {
       cart.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0) * 100
     )
 
+    // ✅ Prepare downloadable model URLs
+    const downloadableItems = cart
+      .filter((item: any) => item.modelUrl)
+      .map((item: any) => ({
+        name: item.name,
+        modelUrl: item.modelUrl,
+      }))
+
+    const itemsParam = encodeURIComponent(JSON.stringify(downloadableItems))
+    const redirectUrl = `https://www.swagifyy.com/download?items=${itemsParam}`
+
     // Get Auth Token
     const authRes = await fetch("https://accept.paymob.com/api/auth/tokens", {
       method: "POST",
@@ -23,7 +34,7 @@ export async function POST(req: NextRequest) {
     const authData = await authRes.json()
     const auth_token = authData.token
 
-    // Create Order
+    // ✅ Create Order WITH callback_url
     const orderRes = await fetch("https://accept.paymob.com/api/ecommerce/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -33,13 +44,13 @@ export async function POST(req: NextRequest) {
         amount_cents,
         currency: "EGP",
         items: [],
+        callback_url: redirectUrl, // ✅ أهو التعديل المهم
       }),
     })
 
     const orderData = await orderRes.json()
     const order_id = orderData.id
 
-    // Choose Integration ID
     const integration_id =
       paymentMethod === "mobile_wallets"
         ? INTEGRATION_ID_WALLET
@@ -77,19 +88,8 @@ export async function POST(req: NextRequest) {
     const paymentKeyData = await paymentKeyRes.json()
     const payment_token = paymentKeyData.token
 
-    // ✅ Prepare downloadable model URLs
-    const downloadableItems = cart
-      .filter((item: any) => item.modelUrl)
-      .map((item: any) => ({
-        name: item.name,
-        modelUrl: item.modelUrl,
-      }))
-
-    const itemsParam = encodeURIComponent(JSON.stringify(downloadableItems))
-    const redirectUrl = `https://www.swagifyy.com/download?items=${itemsParam}`
-
-    // ✅ Final Paymob URL with redirect
-    const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}&return_url=${redirectUrl}`
+    // ✅ Final iframe URL (بدون return_url دلوقتي)
+    const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}`
 
     return NextResponse.json({ payment_url })
   } catch (error) {
