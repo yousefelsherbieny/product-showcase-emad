@@ -193,7 +193,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-const { addToCart } = useCart();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const foundProduct = productsData.find((p) => p.id === id);
@@ -316,6 +316,7 @@ const { addToCart } = useCart();
                   price: numericPrice,
                   image: product.images[0],
                   quantity: 1,
+                  modelUrl: product.modelUrl, // ✅ أضف دي هنا
                 });
               }}
             >

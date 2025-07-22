@@ -24,29 +24,35 @@ export default function CheckoutPage() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckout = async () => {
-    const res = await fetch("/api/paymob-checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        cart,
-        paymentMethod: form.paymentMethod,
-        customer: {
-          email: form.email,
-          firstName: form.firstName,
-          lastName: form.lastName,
-          phone: form.phone,
-        },
-      }),
-    })
+ const handleCheckout = async () => {
+  const res = await fetch("/api/paymob-checkout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      cart,
+      paymentMethod: form.paymentMethod,
+      customer: {
+        email: form.email,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phone: form.phone,
+      },
+    }),
+  });
 
-    const data = await res.json()
-    if (data.payment_url) {
-      window.location.href = data.payment_url
-    } else {
-      alert("فشل في تجهيز الدفع")
-    }
+  const data = await res.json();
+
+  if (data.payment_url) {
+    // ✅ خزّن السلة قبل ما توديه على الدفع
+    localStorage.setItem("purchased_cart", JSON.stringify(cart));
+
+    // ✅ اذهب لصفحة الدفع
+    window.location.href = data.payment_url;
+  } else {
+    alert("فشل في تجهيز الدفع");
   }
+};
+
 
   return (
     <main className="min-h-screen bg-white text-black grid grid-cols-1 lg:grid-cols-2">

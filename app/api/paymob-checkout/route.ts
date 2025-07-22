@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     const orderData = await orderRes.json()
     const order_id = orderData.id
 
-    // Choose Integration ID based on payment method
+    // Choose Integration ID
     const integration_id =
       paymentMethod === "mobile_wallets"
         ? INTEGRATION_ID_WALLET
@@ -77,7 +77,19 @@ export async function POST(req: NextRequest) {
     const paymentKeyData = await paymentKeyRes.json()
     const payment_token = paymentKeyData.token
 
-    const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}`
+    // ✅ Prepare downloadable model URLs
+    const downloadableItems = cart
+      .filter((item: any) => item.modelUrl)
+      .map((item: any) => ({
+        name: item.name,
+        modelUrl: item.modelUrl,
+      }))
+
+    const itemsParam = encodeURIComponent(JSON.stringify(downloadableItems))
+    const redirectUrl = `https://www.swagifyy.com/download?items=${itemsParam}`
+
+    // ✅ Final Paymob URL with redirect
+    const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}&return_url=${redirectUrl}`
 
     return NextResponse.json({ payment_url })
   } catch (error) {

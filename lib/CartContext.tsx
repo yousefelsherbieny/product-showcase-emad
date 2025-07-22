@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import toast from "react-hot-toast";
 
 type CartItem = {
@@ -9,6 +15,7 @@ type CartItem = {
   price: number;
   image: string;
   quantity: number;
+  modelUrl?: string; // ✅ أضف دي هنا
 };
 
 type CartContextType = {
@@ -37,16 +44,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-const addToCart = (item: CartItem) => {
-  const exists = cart.find((i) => i.id === item.id);
-  if (exists) {
-    toast.error("❌ Already in cart!");
-    return;
-  }
-  setCart([...cart, item]);
-  toast.success("✅ Added to cart!");
-};
-
+  const addToCart = (item: CartItem) => {
+    const exists = cart.find((i) => i.id === item.id);
+    if (exists) {
+      toast.error("❌ Already in cart!");
+      return;
+    }
+    setCart([...cart, item]);
+    toast.success("✅ Added to cart!");
+  };
 
   const increaseQuantity = (id: string) => {
     setCart((prev) =>
@@ -72,7 +78,13 @@ const addToCart = (item: CartItem) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, increaseQuantity, decreaseQuantity, removeFromCart }}
+      value={{
+        cart,
+        addToCart,
+        increaseQuantity,
+        decreaseQuantity,
+        removeFromCart,
+      }}
     >
       {children}
     </CartContext.Provider>

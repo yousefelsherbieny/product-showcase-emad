@@ -30,7 +30,7 @@ export default function CartPage() {
 
   const router = useRouter();
 
-  const handleCheckout = async () => {
+  const handleCheckoutClick = () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
@@ -39,33 +39,7 @@ export default function CartPage() {
       return;
     }
 
-    try {
-      const response = await fetch("/api/paymob-checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cart,
-          paymentMethod: "card", // أو "mobile_wallets"
-          customer: {
-            email: user.email || "test@example.com",
-            firstName: "Soly",
-            lastName: "Swagifyy",
-            phone: "01000000000", // ممكن تجيبيه من البروفايل لو حابة
-          },
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data?.payment_url) {
-        window.location.href = data.payment_url;
-      } else {
-        alert("خطأ أثناء تجهيز الدفع: " + JSON.stringify(data));
-      }
-    } catch (err) {
-      console.error("Checkout Error:", err);
-      alert("فشل الاتصال بـ Paymob.");
-    }
+    router.push("/checkout");
   };
 
   return (
@@ -188,7 +162,7 @@ export default function CartPage() {
               </div>
 
               <Button
-                onClick={() => router.push("/checkout")}
+                onClick={handleCheckoutClick}
                 className="w-full mb-3 bg-primary hover:bg-primary/90"
               >
                 <CreditCard className="mr-2 h-5 w-5" />
