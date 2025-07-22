@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { signInWithEmail, signInWithGoogle, logLogin, logError } from "../../../lib/firebase"
+import { signInWithEmail, signInWithGoogle, logLogin, logError } from "@/lib/firebase"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)

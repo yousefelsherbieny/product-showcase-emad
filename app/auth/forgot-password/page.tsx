@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { resetPassword, logPasswordReset, logError } from "../../../lib/firebase"
+import { resetPassword, logPasswordReset, logError } from "@/lib/firebase"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")

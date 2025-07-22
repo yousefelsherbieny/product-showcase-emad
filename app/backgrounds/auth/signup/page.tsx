@@ -6,7 +6,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { signUpWithEmail, signInWithGoogle, createUserProfile, logSignUp, logError } from "../../../lib/firebase"
+import { signUpWithEmail, signInWithGoogle, createUserProfile, logSignUp, logError } from "@/lib/firebase"
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
