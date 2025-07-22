@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
 import { useCart } from "@/lib/CartContext";
-
+import { getAuth } from "firebase/auth";
+import { useRouter } from "next/navigation";
 export default function CartPage() {
   const { cart, increaseQuantity, decreaseQuantity, removeFromCart } =
     useCart();
@@ -26,29 +27,46 @@ export default function CartPage() {
   const subtotal = getSubtotal();
   const tax = subtotal * 0.0;
   const total = subtotal + tax;
+
+  const router = useRouter();
+
   const handleCheckout = async () => {
-  try {
-    const response = await fetch("/api/paymob-checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart }),
-    });
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-    const data = await response.json();
-
-    console.log("Paymob response:", data); // 👈 اطبع النتيجة
-
-    if (data?.payment_url) {
-      window.location.href = data.payment_url;
-    } else {
-      alert("حدث خطأ أثناء تجهيز الدفع. \n" + JSON.stringify(data));
+    if (!user) {
+      router.push("/auth/login");
+      return;
     }
-  } catch (err) {
-    console.error("Checkout Error:", err);
-    alert("فشل الاتصال بـ Paymob.");
-  }
-};
 
+    try {
+      const response = await fetch("/api/paymob-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cart,
+          paymentMethod: "card", // أو "mobile_wallets"
+          customer: {
+            email: user.email || "test@example.com",
+            firstName: "Soly",
+            lastName: "Swagifyy",
+            phone: "01000000000", // ممكن تجيبيه من البروفايل لو حابة
+          },
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data?.payment_url) {
+        window.location.href = data.payment_url;
+      } else {
+        alert("خطأ أثناء تجهيز الدفع: " + JSON.stringify(data));
+      }
+    } catch (err) {
+      console.error("Checkout Error:", err);
+      alert("فشل الاتصال بـ Paymob.");
+    }
+  };
 
   return (
     <main className="relative min-h-screen bg-gray-900 text-white">
@@ -170,7 +188,7 @@ export default function CartPage() {
               </div>
 
               <Button
-                onClick={handleCheckout}
+                onClick={() => router.push("/checkout")}
                 className="w-full mb-3 bg-primary hover:bg-primary/90"
               >
                 <CreditCard className="mr-2 h-5 w-5" />
