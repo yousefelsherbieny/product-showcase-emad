@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const itemsParam = encodeURIComponent(JSON.stringify(downloadableItems))
     const redirectUrl = `https://www.swagifyy.com/download?items=${itemsParam}`
 
-    // Get Auth Token
+    // ✅ Step 1: Get Auth Token
     const authRes = await fetch("https://accept.paymob.com/api/auth/tokens", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const authData = await authRes.json()
     const auth_token = authData.token
 
-    // ✅ Create Order WITH callback_url
+    // ✅ Step 2: Create Order (NO callback_url here)
     const orderRes = await fetch("https://accept.paymob.com/api/ecommerce/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,19 +44,19 @@ export async function POST(req: NextRequest) {
         amount_cents,
         currency: "EGP",
         items: [],
-        callback_url: redirectUrl, // ✅ أهو التعديل المهم
       }),
     })
 
     const orderData = await orderRes.json()
     const order_id = orderData.id
 
+    // ✅ Step 3: Choose Integration ID
     const integration_id =
       paymentMethod === "mobile_wallets"
         ? INTEGRATION_ID_WALLET
         : INTEGRATION_ID_CARD
 
-    // Get Payment Key
+    // ✅ Step 4: Get Payment Key WITH callback_url
     const paymentKeyRes = await fetch("https://accept.paymob.com/api/acceptance/payment_keys", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,16 +82,18 @@ export async function POST(req: NextRequest) {
         },
         currency: "EGP",
         integration_id,
+        callback_url: redirectUrl, // ✅ ده المكان الصح
       }),
     })
 
     const paymentKeyData = await paymentKeyRes.json()
     const payment_token = paymentKeyData.token
 
-    // ✅ Final iframe URL (بدون return_url دلوقتي)
+    // ✅ Step 5: Return iframe URL
     const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}`
 
     return NextResponse.json({ payment_url })
+
   } catch (error) {
     console.error("Paymob Error:", error)
     return NextResponse.json({ error: "Internal error" }, { status: 500 })
