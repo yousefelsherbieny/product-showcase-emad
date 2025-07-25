@@ -144,7 +144,7 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
   const product = products[id as string];
   const [active, setActive] = useState(false); // false = Idle, true = secondClip
-const { addToCart } = useCart();
+  const { addToCart } = useCart();
 
   if (!product)
     return <div className="text-white p-10">Product not found.</div>;
@@ -218,6 +218,7 @@ const { addToCart } = useCart();
                     price: product.price,
                     image: product.images[0], // أول صورة
                     quantity: 1,
+                    modelUrl: product.model, // ✅ ده أهم سطر
                   })
                 }
               >
