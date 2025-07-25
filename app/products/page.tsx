@@ -160,6 +160,7 @@ export default function ProductsPage() {
                       price: priceNumber,
                       image: product.image[0],
                       quantity: 1,
+                      modelUrl: product.modelUrl, // ✅ مهم جدًا
                     });
                   }}
                 >
