@@ -30,7 +30,8 @@ export default function DownloadPage() {
   return (
     <div className="min-h-screen bg-white text-black p-8">
       <h1 className="text-3xl font-bold mb-6">🎉 شكراً لشرائك! قم بتحميل الموديلات:</h1>
-
+ 
+ 
       {models.length === 0 ? (
         <p className="text-gray-500">لا يوجد ملفات قابلة للتحميل. تأكد إنك اشتريت موديلات تحتوي على روابط تحميل.</p>
       ) : (
