@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 
 export default function DownloadPage() {
-  const [models, setModels] = useState<{ name: string; modelUrl: string }[]>([]);
+  const [models, setModels] = useState<{ name: string; modelUrl: string }[]>(
+    []
+  );
 
   useEffect(() => {
-    const raw = localStorage.getItem("purchased_cart");
+    const raw = sessionStorage.getItem("purchased_cart"); // 👈 بدل localStorage بـ sessionStorage
     if (raw) {
       try {
         const parsedCart = JSON.parse(raw);
@@ -20,7 +22,7 @@ export default function DownloadPage() {
         setModels(downloadableModels);
 
         // ✅ امسح cart بعد ما نعرضه
-        localStorage.removeItem("purchased_cart");
+        sessionStorage.removeItem("purchased_cart");
       } catch (err) {
         console.error("Error parsing purchased_cart", err);
       }
@@ -29,11 +31,15 @@ export default function DownloadPage() {
 
   return (
     <div className="min-h-screen bg-white text-black p-8">
-      <h1 className="text-3xl font-bold mb-6">🎉 شكراً لشرائك! قم بتحميل الموديلات:</h1>
- 
- 
+      <h1 className="text-3xl font-bold mb-6">
+        🎉 شكراً لشرائك! قم بتحميل الموديلات:
+      </h1>
+
       {models.length === 0 ? (
-        <p className="text-gray-500">لا يوجد ملفات قابلة للتحميل. تأكد إنك اشتريت موديلات تحتوي على روابط تحميل.</p>
+        <p className="text-gray-500">
+          لا يوجد ملفات قابلة للتحميل. تأكد إنك اشتريت موديلات تحتوي على روابط
+          تحميل.
+        </p>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {models.map((item, index) => (
