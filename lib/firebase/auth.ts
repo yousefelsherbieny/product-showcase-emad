@@ -14,13 +14,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from "firebase/auth"
-import { auth, db } from "./config"
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-  collection,
-} from "firebase/firestore"
+import { auth } from "./config"
 
 // Email and Password Authentication
 export const signUpWithEmail = async (
@@ -34,35 +28,18 @@ export const signUpWithEmail = async (
       email,
       password
     )
-
-    const user = userCredential.user
-
-    if (displayName && user) {
-      await updateProfile(user, { displayName })
+    
+    // Update display name if provided
+    if (displayName && userCredential.user) {
+      await updateProfile(userCredential.user, { displayName })
     }
-
-    if (user) {
-      await sendEmailVerification(user)
-
-      // ✅ Create user document in Firestore
-      const userRef = doc(db, "users", user.uid)
-      await setDoc(userRef, {
-        displayName: user.displayName || "",
-        email: user.email || "",
-        photoURL: user.photoURL || "",
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      })
-
-      // ✅ Create empty purchases subcollection for the user
-      const purchasesRef = doc(collection(userRef, "purchases"))
-      await setDoc(purchasesRef, {
-        createdAt: serverTimestamp(),
-        initialized: true,
-      })
+    
+    // Send email verification
+    if (userCredential.user) {
+      await sendEmailVerification(userCredential.user)
     }
-
-    return user
+    
+    return userCredential.user
   } catch (error: any) {
     throw new Error(error.message || "Failed to create account")
   }
@@ -88,9 +65,10 @@ export const signInWithEmail = async (
 export const signInWithGoogle = async (): Promise<User> => {
   try {
     const provider = new GoogleAuthProvider()
+    // Add additional scopes if needed
     provider.addScope("profile")
     provider.addScope("email")
-
+    
     const result: UserCredential = await signInWithPopup(auth, provider)
     return result.user
   } catch (error: any) {
@@ -130,9 +108,11 @@ export const updateUserPassword = async (
       throw new Error("No authenticated user found")
     }
 
+    // Re-authenticate user before updating password
     const credential = EmailAuthProvider.credential(user.email, currentPassword)
     await reauthenticateWithCredential(user, credential)
-
+    
+    // Update password
     await updatePassword(user, newPassword)
   } catch (error: any) {
     throw new Error(error.message || "Failed to update password")

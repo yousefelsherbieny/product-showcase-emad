@@ -1,29 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { app } from "@/lib/firebase/config"
 
 export default function PurchasesPage() {
   const [downloads, setDownloads] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchPurchases = async () => {
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const user = auth.currentUser;
-
-      if (!user) return;
-
-      const purchasesRef = collection(db, "users", user.uid, "purchases");
-      const snapshot = await getDocs(purchasesRef);
-
-      const items = snapshot.docs.map((doc) => doc.data());
-      setDownloads(items);
-    };
-
-    fetchPurchases();
+    const saved = localStorage.getItem("downloads"); // ✅ تم التعديل هنا
+    if (saved) {
+      setDownloads(JSON.parse(saved));
+    }
   }, []);
 
   return (
