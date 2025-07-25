@@ -75,7 +75,7 @@ export default function Navbar() {
             <Link href="/products" className="hover:text-primary">
               Products
             </Link>
-            <Link href="/character" className="hover:text-primary">
+            <Link href="/Character" className="hover:text-primary">
               Character
             </Link>
             <Link href="/about" className="hover:text-primary">
@@ -111,20 +111,16 @@ export default function Navbar() {
                   )}
                 </button>
 
-                <div
-                  className="absolute right-0 mt-2 w-48 rounded shadow-lg
-                                bg-white opacity-0 group-hover:opacity-100
-                                transition-opacity duration-200 text-sm z-50"
-                >
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
                   <Link
-                    href="/settings"
-                    className="block px-4 py-2 hover:bg-gray-100 text-gray-700"
+                    href="/Settings/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Settings
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700"
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                   >
                     Logout
                   </button>
@@ -196,7 +192,7 @@ export default function Navbar() {
                   Products
                 </Link>
                 <Link
-                  href="/character"
+                  href="/Character"
                   onClick={() => setOpen(false)}
                   className="block"
                 >
@@ -231,7 +227,7 @@ export default function Navbar() {
                 {user ? (
                   <>
                     <Link
-                      href="/settings"
+                      href="/Settings/profile"
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-2"
                     >
