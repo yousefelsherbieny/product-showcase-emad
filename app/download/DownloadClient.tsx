@@ -19,10 +19,10 @@ export default function DownloadPage() {
 
         setModels(downloadableModels);
 
-        // ✅ خزّنهم كـ downloads علشان تظهر في صفحة المشتريات
+        // ✅ خزّنهم كـ downloads علشان يظهروا في صفحة المشتريات
         localStorage.setItem("downloads", JSON.stringify(downloadableModels));
 
-        // ✅ بعد ما خزّنا، نحذف الـ cart
+        // ✅ امسح السلة بعد التخزين
         localStorage.removeItem("purchased_cart");
       } catch (err) {
         console.error("Error parsing purchased_cart", err);
@@ -32,26 +32,30 @@ export default function DownloadPage() {
 
   return (
     <div className="min-h-screen bg-white text-black p-8">
-      <h1 className="text-3xl font-bold mb-6">🎉 شكراً لشرائك! قم بتحميل الموديلات:</h1>
+      <h2 className="text-2xl font-bold mb-6 text-center text-green-700">🎉 شكراً لشرائك!</h2>
+      <h3 className="text-lg mb-4 text-center">قم بتحميل الموديلات التي قمت بشرائها:</h3>
 
       {models.length === 0 ? (
-        <p className="text-gray-500">لا يوجد ملفات قابلة للتحميل. تأكد إنك اشتريت موديلات تحتوي على روابط تحميل.</p>
+        <p className="text-gray-500 text-center">
+          لا يوجد ملفات قابلة للتحميل. تأكد أنك اشتريت موديلات تحتوي على روابط تحميل.
+        </p>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="space-y-4 max-w-2xl mx-auto">
           {models.map((item, index) => (
-            <div key={index} className="p-4 border rounded shadow">
-              <h2 className="font-semibold mb-2">{item.name}</h2>
+            <li key={index} className="bg-gray-100 border border-gray-300 rounded p-4 flex justify-between items-center">
+              <span className="font-semibold">{item.name}</span>
               <a
                 href={item.modelUrl}
                 download
-                className="text-blue-600 hover:underline"
                 target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
               >
-                ⬇️ تحميل الموديل
+                ⬇️ تحميل
               </a>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

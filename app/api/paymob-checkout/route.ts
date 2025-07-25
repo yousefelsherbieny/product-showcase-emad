@@ -1,4 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getFirestore, doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { initializeApp, getApps } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+};
+
+if (!getApps().length) initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
 
 const API_KEY = process.env.PAYMOB_API_KEY!;
 const IFRAME_ID = process.env.PAYMOB_IFRAME_ID!;
@@ -7,7 +21,7 @@ const INTEGRATION_ID_WALLET = process.env.PAYMOB_INTEGRATION_ID_WALLET!;
 
 export async function POST(req: NextRequest) {
   try {
-    const { cart, customer, paymentMethod } = await req.json();
+    const { cart, customer, paymentMethod, uid } = await req.json();
 
     const amount_cents = Math.round(
       cart.reduce(
@@ -22,9 +36,20 @@ export async function POST(req: NextRequest) {
       .map((item: any) => ({
         name: item.name,
         modelUrl: item.modelUrl,
+        quantity: item.quantity,
+        price: item.price,
+        createdAt: serverTimestamp(),
       }));
 
-    const redirectUrl = `https://www.swagifyy.com/download`; // بدون أي query params
+    // ✅ Save purchases under user's collection BEFORE redirect
+    if (uid && downloadableItems.length) {
+      const userPurchasesRef = collection(db, "users", uid, "purchases");
+      for (const item of downloadableItems) {
+        await addDoc(userPurchasesRef, item);
+      }
+    }
+
+    const redirectUrl = `https://www.swagifyy.com/download`;
 
     // ✅ Step 1: Get Auth Token
     const authRes = await fetch("https://accept.paymob.com/api/auth/tokens", {
@@ -36,7 +61,7 @@ export async function POST(req: NextRequest) {
     const authData = await authRes.json();
     const auth_token = authData.token;
 
-    // ✅ Step 2: Create Order (NO callback_url here)
+    // ✅ Step 2: Create Order
     const orderRes = await fetch(
       "https://accept.paymob.com/api/ecommerce/orders",
       {
@@ -55,13 +80,12 @@ export async function POST(req: NextRequest) {
     const orderData = await orderRes.json();
     const order_id = orderData.id;
 
-    // ✅ Step 3: Choose Integration ID
     const integration_id =
       paymentMethod === "mobile_wallets"
         ? INTEGRATION_ID_WALLET
         : INTEGRATION_ID_CARD;
 
-    // ✅ Step 4: Get Payment Key WITH callback_url
+    // ✅ Step 4: Get Payment Key
     const paymentKeyRes = await fetch(
       "https://accept.paymob.com/api/acceptance/payment_keys",
       {
@@ -79,7 +103,7 @@ export async function POST(req: NextRequest) {
             first_name: customer.firstName || "Test",
             street: "NA",
             building: "NA",
-            phone_number: "+2" + customer.phone || "+201234567890",
+            phone_number: "+2" + (customer.phone || "01234567890"),
             shipping_method: "NA",
             postal_code: "NA",
             city: "Cairo",
@@ -89,7 +113,7 @@ export async function POST(req: NextRequest) {
           },
           currency: "EGP",
           integration_id,
-          callback_url: redirectUrl, // ✅ ده المكان الصح
+          callback_url: redirectUrl,
         }),
       }
     );
@@ -97,7 +121,6 @@ export async function POST(req: NextRequest) {
     const paymentKeyData = await paymentKeyRes.json();
     const payment_token = paymentKeyData.token;
 
-    // ✅ Step 5: Return iframe URL
     const payment_url = `https://accept.paymob.com/api/acceptance/iframes/${IFRAME_ID}?payment_token=${payment_token}`;
 
     return NextResponse.json({ payment_url });
