@@ -6,7 +6,7 @@ export default function PurchasesPage() {
   const [downloads, setDownloads] = useState<any[]>([]);
 
   useEffect(() => {
-    const saved = sessionStorage.getItem("downloads");
+    const saved = localStorage.getItem("downloads"); // ✅ تم التعديل هنا
     if (saved) {
       setDownloads(JSON.parse(saved));
     }
