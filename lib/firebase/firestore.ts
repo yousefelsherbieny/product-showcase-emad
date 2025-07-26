@@ -336,4 +336,20 @@ export const incrementField = async (
   }
 }
 
+// Purchases: Get all downloadable models for a user
+export const getUserPurchases = async (
+  userId: string
+): Promise<{ name: string; modelUrl: string }[]> => {
+  try {
+    const snapshot = await getDocs(collection(db, "users", userId, "purchases"))
+    return snapshot.docs.map((doc) => doc.data()) as {
+      name: string
+      modelUrl: string
+    }[]
+  } catch (error: any) {
+    throw new Error(error.message || "Failed to get user purchases")
+  }
+}
+
+
 export { db, serverTimestamp, Timestamp }

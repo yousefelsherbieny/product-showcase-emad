@@ -1,13 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useCart } from "@/lib/CartContext"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { auth } from "@/lib/firebase/config"
 
 export default function CheckoutPage() {
   const { cart } = useCart()
   const router = useRouter()
+  const [uid, setUid] = useState<string | null>(null)
 
   const [form, setForm] = useState({
     email: "",
@@ -24,35 +26,45 @@ export default function CheckoutPage() {
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
- const handleCheckout = async () => {
-  const res = await fetch("/api/paymob-checkout", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      cart,
-      paymentMethod: form.paymentMethod,
-      customer: {
-        email: form.email,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        phone: form.phone,
-      },
-    }),
-  });
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) setUid(user.uid)
+      else setUid(null)
+    })
+    return () => unsubscribe()
+  }, [])
 
-  const data = await res.json();
+  const handleCheckout = async () => {
+    if (!uid) {
+      alert("يجب تسجيل الدخول قبل الشراء")
+      return
+    }
 
-  if (data.payment_url) {
-    // ✅ خزّن السلة قبل ما توديه على الدفع
-    localStorage.setItem("purchased_cart", JSON.stringify(cart));
+    const res = await fetch("/api/paymob-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        uid,
+        cart,
+        paymentMethod: form.paymentMethod,
+        customer: {
+          email: form.email,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          phone: form.phone,
+        },
+      }),
+    })
 
-    // ✅ اذهب لصفحة الدفع
-    window.location.href = data.payment_url;
-  } else {
-    alert("فشل في تجهيز الدفع");
+    const data = await res.json()
+
+    if (data.payment_url) {
+      // ✅ حذف التخزين المحلي
+      window.location.href = data.payment_url
+    } else {
+      alert("فشل في تجهيز الدفع")
+    }
   }
-};
-
 
   return (
     <main className="min-h-screen bg-white text-black grid grid-cols-1 lg:grid-cols-2">

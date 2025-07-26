@@ -51,6 +51,7 @@
     "expo-file-system": "latest",
     "expo-gl": "latest",
     "firebase": "^11.9.1",
+    "firebase-admin": "^13.4.0",
     "framer-motion": "latest",
     "gsap": "^3.13.0",
     "input-otp": "1.4.1",

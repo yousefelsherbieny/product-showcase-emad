@@ -1,21 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase/config";
 
 export default function PurchasesPage() {
   const [downloads, setDownloads] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("downloads"); // ✅ تم التعديل هنا
-    if (saved) {
-      setDownloads(JSON.parse(saved));
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const purchasesRef = collection(db, "users", user.uid, "purchases");
+          const snapshot = await getDocs(purchasesRef);
+          const models = snapshot.docs.map((doc) => doc.data());
+          setDownloads(models);
+        } catch (error) {
+          console.error("Failed to load purchases:", error);
+        }
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">📦 Your Purchases</h2>
-      {downloads.length === 0 ? (
+      {loading ? (
+        <p className="text-gray-400">Loading...</p>
+      ) : downloads.length === 0 ? (
         <p className="text-gray-400">No downloadable models found.</p>
       ) : (
         <ul className="space-y-4">
