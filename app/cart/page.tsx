@@ -164,6 +164,7 @@ export default function CartPage() {
               <Button
                 onClick={handleCheckoutClick}
                 className="w-full mb-3 bg-primary hover:bg-primary/90"
+                disabled={cart.length === 0}
               >
                 <CreditCard className="mr-2 h-5 w-5" />
                 Checkout

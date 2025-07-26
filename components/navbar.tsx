@@ -84,9 +84,6 @@ export default function Navbar() {
             <Link href="/contact" className="hover:text-primary">
               Contact
             </Link>
-            <Link href="/download" className="hover:text-primary">
-              Downloads
-            </Link>
           </nav>
 
           {/* right‑side icons */}

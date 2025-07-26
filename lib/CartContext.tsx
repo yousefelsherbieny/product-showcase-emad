@@ -8,6 +8,15 @@ import React, {
   ReactNode,
 } from "react";
 import toast from "react-hot-toast";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  doc,
+  setDoc,
+  deleteDoc,
+  getDocs,
+} from "firebase/firestore";
+import { auth, db } from "@/lib/firebase/config";
 
 type CartItem = {
   id: string;
@@ -15,7 +24,7 @@ type CartItem = {
   price: number;
   image: string;
   quantity: number;
-  modelUrl?: string; // ✅ أضف دي هنا
+  modelUrl?: string;
 };
 
 type CartContextType = {
@@ -30,50 +39,79 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  // ⏪ Load cart from localStorage on mount
+  // ✅ تحقق من حالة تسجيل الدخول
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid);
+        const cartRef = collection(db, "users", user.uid, "cart");
+        const snapshot = await getDocs(cartRef);
+        const firestoreCart = snapshot.docs.map((doc) => doc.data() as CartItem);
+        setCart(firestoreCart);
+      } else {
+        const local = localStorage.getItem("cart");
+        setCart(local ? JSON.parse(local) : []);
+        setUserId(null);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
-  // 💾 Save cart to localStorage whenever it changes
+  // ✅ مزامنة localStorage فقط لو مفيش تسجيل دخول
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (item: CartItem) => {
-    const exists = cart.find((i) => i.id === item.id);
-    if (exists) {
-      toast.error("❌ Already in cart!");
-      return;
+    if (!userId) {
+      localStorage.setItem("cart", JSON.stringify(cart));
     }
-    setCart([...cart, item]);
+  }, [cart, userId]);
+
+  const addToCart = async (item: CartItem) => {
+    const exists = cart.find((i) => i.id === item.id);
+    if (exists) return toast.error("❌ Already in cart!");
+
+    const updated = [...cart, item];
+    setCart(updated);
+
+    if (userId) {
+      await setDoc(doc(db, "users", userId, "cart", item.id), item);
+    }
     toast.success("✅ Added to cart!");
   };
 
-  const increaseQuantity = (id: string) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
+  const increaseQuantity = async (id: string) => {
+    const updated = cart.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
+    setCart(updated);
+
+    if (userId) {
+      const updatedItem = updated.find((item) => item.id === id)!;
+      await setDoc(doc(db, "users", userId, "cart", id), updatedItem);
+    }
   };
 
-  const decreaseQuantity = (id: string) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-          : item
-      )
+  const decreaseQuantity = async (id: string) => {
+    const updated = cart.map((item) =>
+      item.id === id
+        ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+        : item
     );
+    setCart(updated);
+
+    if (userId) {
+      const updatedItem = updated.find((item) => item.id === id)!;
+      await setDoc(doc(db, "users", userId, "cart", id), updatedItem);
+    }
   };
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = async (id: string) => {
+    const updated = cart.filter((item) => item.id !== id);
+    setCart(updated);
+
+    if (userId) {
+      await deleteDoc(doc(db, "users", userId, "cart", id));
+    }
   };
 
   return (
