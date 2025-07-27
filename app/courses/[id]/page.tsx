@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
+import ObjectParticles from "@/components/backgrounds/object-particles";
 
 const courses = [
   {
@@ -80,67 +81,76 @@ export default function CourseDetailPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-950 text-white">
-      <Navbar />
+    <main className="relative min-h-screen bg-gray-950 text-white">
+      {/* 👇 خلفية الجسيمات */}
+      <div className="fixed inset-0 z-0">
+        <ObjectParticles count={30} background="#111827" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-transparent to-gray-900/70 pointer-events-none"></div>
+      </div>
 
-      <main className="flex-grow container mx-auto px-6 pt-32 pb-20 space-y-12">
-        {/* Breadcrumb */}
-        <div className="flex items-center justify-between">
-          <Link
-            href="/courses"
-            className="text-gray-400 hover:text-white transition-colors text-sm"
-          >
-            ← Back to Courses
-          </Link>
-          <span className="text-sm text-gray-500">{course.category}</span>
-        </div>
+      {/* 👇 المحتوى الفعلي */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
 
-        {/* Course Image */}
-        <div className="relative w-full h-[400px] overflow-hidden rounded-2xl shadow-xl">
-          <Image
-            src={course.image}
-            alt={course.title}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute top-4 right-4 bg-purple-600 text-white text-sm px-3 py-1 rounded-full shadow-lg">
-            {course.price}
+        <main className="flex-grow container mx-auto px-6 pt-32 pb-20 space-y-12">
+          {/* Breadcrumb */}
+          <div className="flex items-center justify-between">
+            <Link
+              href="/courses"
+              className="text-gray-400 hover:text-white transition-colors text-sm"
+            >
+              ← Back to Courses
+            </Link>
+            <span className="text-sm text-gray-500">{course.category}</span>
           </div>
-        </div>
 
-        {/* Course Info */}
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold">{course.title}</h1>
-          <p className="text-gray-300 max-w-3xl">{course.description}</p>
-        </div>
+          {/* Course Image */}
+          <div className="relative w-full h-[400px] overflow-hidden rounded-2xl shadow-xl">
+            <Image
+              src={course.image}
+              alt={course.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute top-4 right-4 bg-purple-600 text-white text-sm px-3 py-1 rounded-full shadow-lg">
+              {course.price}
+            </div>
+          </div>
 
-        {/* Course Syllabus */}
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">What You’ll Learn</h2>
-          <ul className="list-disc list-inside space-y-2 text-gray-300">
-            {course.syllabus.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </section>
+          {/* Course Info */}
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold">{course.title}</h1>
+            <p className="text-gray-300 max-w-3xl">{course.description}</p>
+          </div>
 
-        {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link
-            href={`/courses/${course.id}/learn`}
-            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium text-center transition"
-          >
-            Start Learning
-          </Link>
-          <button
-            onClick={() => router.back()}
-            className="flex-1 border border-gray-600 hover:bg-gray-800 text-white py-3 rounded-lg font-medium transition"
-          >
-            ← Back to Courses
-          </button>
-        </div>
-      </main>
-    </div>
+          {/* Course Syllabus */}
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">What You’ll Learn</h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-300">
+              {course.syllabus.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </section>
+
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href={`/courses/${course.id}/learn`}
+              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium text-center transition"
+            >
+              Start Learning
+            </Link>
+            <button
+              onClick={() => router.back()}
+              className="flex-1 border border-gray-600 hover:bg-gray-800 text-white py-3 rounded-lg font-medium transition"
+            >
+              ← Back to Courses
+            </button>
+          </div>
+        </main>
+      </div>
+    </main>
   );
 }

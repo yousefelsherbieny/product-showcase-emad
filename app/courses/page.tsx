@@ -5,7 +5,8 @@ import Link from "next/link";
 import Navbar from "@/components/navbar";
 import Image from "next/image";
 import { getAuth } from "firebase/auth";
-import { app } from "@/lib/firebase/config"; // تأكد أن المسار صحيح
+import { app } from "@/lib/firebase/config";
+import ObjectParticles from "@/components/backgrounds/object-particles";
 
 const courses = [
   {
@@ -57,7 +58,7 @@ export default function CoursesPage() {
           email: user.email,
           firstName: user.displayName?.split(" ")[0] || "User",
           lastName: user.displayName?.split(" ")[1] || "Name",
-          phone: "", // optional
+          phone: "",
         },
       }),
     });
@@ -71,64 +72,73 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-950 text-white">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-6 pt-32 pb-20">
-        <div className="flex items-center justify-between mb-12">
-          <Link
-            href="/"
-            className="text-gray-400 hover:text-white transition-colors text-sm"
-          >
-            ← Back to Home
-          </Link>
-          <h1 className="text-4xl font-bold text-right">Our Courses</h1>
-        </div>
+    <main className="relative min-h-screen bg-gray-900 text-white">
+      {/* 👇 خلفية الجسيمات 3D */}
+      <div className="fixed inset-0 z-0">
+        <ObjectParticles count={30} background="#111827" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-transparent to-gray-900/70 pointer-events-none"></div>
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-10">
-          {courses.map((c) => (
-            <div
-              key={c.id}
-              className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 rounded-2xl overflow-hidden shadow-xl transition-transform hover:-translate-y-1 hover:shadow-2xl duration-300"
+      {/* المحتوى */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        <div className="flex-grow container mx-auto px-6 pt-32 pb-20">
+          <div className="flex items-center justify-between mb-12">
+            <Link
+              href="/"
+              className="text-gray-400 hover:text-white transition-colors text-sm"
             >
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image
-                  src={c.image}
-                  alt={c.title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow">
-                  {c.price}
+              ← Back to Home
+            </Link>
+            <h1 className="text-4xl font-bold text-right">Our Courses</h1>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {courses.map((c) => (
+              <div
+                key={c.id}
+                className="bg-gradient-to-br from-gray-800/70 to-gray-900/70 rounded-2xl overflow-hidden shadow-xl transition-transform hover:-translate-y-1 hover:shadow-2xl duration-300"
+              >
+                <div className="relative h-56 w-full overflow-hidden">
+                  <Image
+                    src={c.image}
+                    alt={c.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full shadow">
+                    {c.price}
+                  </div>
+                </div>
+
+                <div className="p-6 space-y-4">
+                  <p className="text-xs text-purple-400 uppercase tracking-widest">
+                    {c.category}
+                  </p>
+                  <h2 className="text-lg font-semibold leading-snug">
+                    {c.title}
+                  </h2>
+
+                  <div className="flex gap-4 pt-4">
+                    <button
+                      onClick={() => handleBuy(c)}
+                      className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium text-sm"
+                    >
+                      Buy Now
+                    </button>
+                    <Link
+                      href={`/courses/${c.id}`}
+                      className="flex-1 border border-gray-600 bg-transparent hover:bg-gray-800 text-white py-2 rounded-lg font-medium text-sm text-center"
+                    >
+                      Learn More
+                    </Link>
+                  </div>
                 </div>
               </div>
-
-              <div className="p-6 space-y-4">
-                <p className="text-xs text-purple-400 uppercase tracking-widest">
-                  {c.category}
-                </p>
-                <h2 className="text-lg font-semibold leading-snug">
-                  {c.title}
-                </h2>
-
-                <div className="flex gap-4 pt-4">
-                  <button
-                    onClick={() => handleBuy(c)}
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-medium text-sm"
-                  >
-                    Buy Now
-                  </button>
-                  <Link
-                    href={`/courses/${c.id}`}
-                    className="flex-1 border border-gray-600 bg-transparent hover:bg-gray-800 text-white py-2 rounded-lg font-medium text-sm text-center"
-                  >
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
