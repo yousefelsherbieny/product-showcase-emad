@@ -14,12 +14,11 @@ export default function LearnPage() {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState<boolean>(true); // حالة الوصول إلى الكورس
 
+  // تغيير المصفوفة لتتضمن فيديوهات Vimeo
   const courseVideoMap: Record<string, string> = {
-    "1": "e71e1b22-d470-45a0-871b-f0d58a63c50a",
-    "2": "f345e6d3-3c32-462f-9cd2-73e283fd4803",
+    "1": "1104918198", // Vimeo video ID
+    "2": "1104918198", // Vimeo video ID
   };
-
-  const LIBRARY_ID = "473301";
 
   useEffect(() => {
     const auth = getAuth(app);
@@ -78,10 +77,11 @@ export default function LearnPage() {
           </div>
         ) : !loading && videoId ? (
           <div className="w-full max-w-6xl aspect-video mx-auto rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+            {/* مشغل الفيديو من Vimeo */}
             <iframe
-              src={`https://iframe.mediadelivery.net/embed/${LIBRARY_ID}/${videoId}`}
+              src={`https://player.vimeo.com/video/${videoId}`}
               loading="lazy"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+              allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
               className="w-full h-full border-0"
             ></iframe>
