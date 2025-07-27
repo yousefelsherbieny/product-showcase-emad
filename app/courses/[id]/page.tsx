@@ -1,4 +1,4 @@
-// app/courses/[id]/page.tsx
+// ✅ app/courses/[id]/page.tsx
 "use client";
 
 import React from "react";
@@ -63,7 +63,6 @@ export default function CourseDetailPage() {
   const router = useRouter();
   const course = courses.find((c) => c.id === id);
 
-  // If no matching course, you might redirect or show Not Found.
   if (!course) {
     return (
       <div className="flex flex-col min-h-screen bg-gray-950 text-white">
@@ -129,9 +128,12 @@ export default function CourseDetailPage() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition">
-            Enroll Now
-          </button>
+          <Link
+            href={`/courses/${course.id}/learn`}
+            className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium text-center transition"
+          >
+            Start Learning
+          </Link>
           <button
             onClick={() => router.back()}
             className="flex-1 border border-gray-600 hover:bg-gray-800 text-white py-3 rounded-lg font-medium transition"
