@@ -1,4 +1,3 @@
-// ✅ app/courses/[id]/page.tsx
 "use client";
 
 import React from "react";
@@ -61,7 +60,7 @@ const courses = [
 export default function CourseDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const course = courses.find((c) => c.id === id);
+  const course = courses.find((c) => c.id === String(id));
 
   if (!course) {
     return (
@@ -85,7 +84,7 @@ export default function CourseDetailPage() {
       <Navbar />
 
       <main className="flex-grow container mx-auto px-6 pt-32 pb-20 space-y-12">
-        {/* Back Link + Breadcrumb */}
+        {/* Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
             href="/courses"
@@ -96,7 +95,7 @@ export default function CourseDetailPage() {
           <span className="text-sm text-gray-500">{course.category}</span>
         </div>
 
-        {/* Hero Image */}
+        {/* Course Image */}
         <div className="relative w-full h-[400px] overflow-hidden rounded-2xl shadow-xl">
           <Image
             src={course.image}
@@ -110,13 +109,13 @@ export default function CourseDetailPage() {
           </div>
         </div>
 
-        {/* Title & Description */}
+        {/* Course Info */}
         <div className="space-y-4">
           <h1 className="text-4xl font-bold">{course.title}</h1>
           <p className="text-gray-300 max-w-3xl">{course.description}</p>
         </div>
 
-        {/* Syllabus */}
+        {/* Course Syllabus */}
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">What You’ll Learn</h2>
           <ul className="list-disc list-inside space-y-2 text-gray-300">
@@ -126,7 +125,7 @@ export default function CourseDetailPage() {
           </ul>
         </section>
 
-        {/* CTA Buttons */}
+        {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
             href={`/courses/${course.id}/learn`}
