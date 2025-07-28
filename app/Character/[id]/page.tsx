@@ -42,7 +42,7 @@ const products: Record<
     secondClip: "Talk",
     description:
       "Modern smartwatch with health and fitness tracking. Track your heart rate, sleep, and steps.",
-    images: ["/I2.JPG", "/I3.JPG", "/I1.JPG"],
+    images: ["/I2.jpg", "/I3.jpg", "/I1.jpg"],
   },
 
   /* AMIR — Idle + Sing -------------------------------------------------- */
@@ -54,7 +54,7 @@ const products: Record<
     secondClip: "Sing",
     description:
       "Compact fitness tracker for daily activities and health insights.",
-    images: ["/A1.JPG", "/A4.JPG", "/A3.JPG"],
+    images: ["/A1.jpg", "/A4.jpg", "/A3.jpg"],
   },
 
   /* LAB — Idle + Talk --------------------------------------------------- */

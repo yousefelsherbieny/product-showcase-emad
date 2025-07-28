@@ -14,7 +14,7 @@ const products = [
   {
     id: "1",
     name: "IMARATY Local",
-    image: "/I4.JPG",
+    image: "/I4.jpg",
     price: 149.99,
     model:
       "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lol-KgsAoE24JXM5kYYtSoMtUMbi6K3Tdk.glb",
@@ -22,7 +22,7 @@ const products = [
   {
     id: "2",
     name: "Amir Eid",
-    image: "/A2.JPG",
+    image: "/A2.jpg",
     price: 99.99,
     model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Amir.glb",
   },
