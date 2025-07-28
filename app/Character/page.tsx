@@ -14,44 +14,46 @@ const products = [
   {
     id: "1",
     name: "IMARATY Local",
-    image: "/images/IMARATY/I4.JPG",
+    image: "/I4.JPG",
     price: 149.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lol-KgsAoE24JXM5kYYtSoMtUMbi6K3Tdk.glb"
+    model:
+      "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lol-KgsAoE24JXM5kYYtSoMtUMbi6K3Tdk.glb",
   },
   {
     id: "2",
     name: "Amir Eid",
-    image: "/images/EID/A2.JPG",
+    image: "/A2.JPG",
     price: 99.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Amir.glb"
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Amir.glb",
   },
   {
     id: "3",
     name: "Labubu",
-    image: "/images/LABUBU/L1.jpg",
+    image: "/L1.jpg",
     price: 129.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lab.glb"
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Lab.glb",
   },
   {
     id: "4",
     name: "Bellie eilesh",
-    image: "/images/BELLIE/B1.jpg",
+    image: "/B1.jpg",
     price: 129.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Bellie3.glb"
+    model:
+      "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Bellie3.glb",
   },
   {
     id: "5",
     name: "Elsa Frozen",
-    image: "/images/ELSA/E4.jpg",
+    image: "/E4.jpg",
     price: 129.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Elsa.glb"
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Elsa.glb",
   },
   {
     id: "6",
     name: "Messi",
-    image: "/images/Messi/E.jpg",
+    image: "/E.jpg",
     price: 129.99,
-    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Messi.glb"
+    model: "https://1vfocskwu2x8m0jf.public.blob.vercel-storage.com/Messi.glb",
   },
 ];
 

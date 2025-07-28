@@ -42,11 +42,7 @@ const products: Record<
     secondClip: "Talk",
     description:
       "Modern smartwatch with health and fitness tracking. Track your heart rate, sleep, and steps.",
-    images: [
-      "/images/IMARATY/I2.JPG",
-      "/images/IMARATY/I3.JPG",
-      "/images/IMARATY/I1.JPG",
-    ],
+    images: ["/I2.JPG", "/I3.JPG", "/I1.JPG"],
   },
 
   /* AMIR — Idle + Sing -------------------------------------------------- */
@@ -58,7 +54,7 @@ const products: Record<
     secondClip: "Sing",
     description:
       "Compact fitness tracker for daily activities and health insights.",
-    images: ["/images/EID/A1.JPG", "/images/EID/A4.JPG", "/images/EID/A3.JPG"],
+    images: ["/A1.JPG", "/A4.JPG", "/A3.JPG"],
   },
 
   /* LAB — Idle + Talk --------------------------------------------------- */
@@ -70,11 +66,7 @@ const products: Record<
     secondClip: "Talk",
     description:
       "Interactive virtual lab assistant with animated speech and idle poses.",
-    images: [
-      "/images/LABUBU/L4.jpg",
-      "/images/LABUBU/L2.jpg",
-      "/images/LABUBU/L3.jpg",
-    ],
+    images: ["/L4.jpg", "/L2.jpg", "/L3.jpg"],
   },
   "4": {
     name: "Bellie eilesh",
@@ -85,11 +77,7 @@ const products: Record<
     secondClip: "Sing",
     description:
       "Interactive virtual lab assistant with animated speech and idle poses.",
-    images: [
-      "/images/BELLIE/B4.jpg",
-      "/images/BELLIE/B3.jpg",
-      "/images/BELLIE/B2.jpg",
-    ],
+    images: ["/B4.jpg", "/B3.jpg", "/B2.jpg"],
   },
   "5": {
     name: "Elsa Frozen",
@@ -99,11 +87,7 @@ const products: Record<
     secondClip: "Sing",
     description:
       "Interactive virtual lab assistant with animated speech and idle poses.",
-    images: [
-      "/images/ELSA/E1.jpg",
-      "/images/ELSA/E2.jpg",
-      "/images/ELSA/E3.jpg",
-    ],
+    images: ["/E1.jpg", "/E2.jpg", "/E3.jpg"],
   },
   "6": {
     name: "Messi",
@@ -113,11 +97,7 @@ const products: Record<
     secondClip: "Sing",
     description:
       "Interactive virtual lab assistant with animated speech and idle poses.",
-    images: [
-      "/images/Messi/ER.jpg",
-      "/images/Messi/F.jpg",
-      "/images/Messi/K.jpg",
-    ],
+    images: ["/ER.jpg", "/F.jpg", "/K.jpg"],
   },
 };
 
