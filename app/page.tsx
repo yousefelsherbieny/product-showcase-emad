@@ -27,6 +27,8 @@ import ObjectParticles from "@/components/backgrounds/object-particles";
 import Navbar from "@/components/navbar";
 import ExplodingGrid from "@/components/ExplodingGrid";
 import HorizontalScrollSection from "@/components/HorizontalScrollSection";
+import AutoMovingGallery from "@/components/auto-moving-gallery";
+import ArchitectureSection from "@/components/architecture-section";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
@@ -153,7 +155,89 @@ export default function Home() {
       }
     }
   }, [isLoaded]);
-
+  // 3D Characters Gallery Data
+  const charactersGallery = [
+    {
+      id: "cc4-male-1",
+      title: "Professional Male Character",
+      category: "CC4 Characters",
+      image: "/dde.jpg",
+      description:
+        "High-quality business professional character with detailed facial features and realistic clothing.",
+    },
+    {
+      id: "cc4-female-1",
+      title: "Modern Female Character",
+      category: "CC4 Characters",
+      image: "/dfg.png",
+      description:
+        "Contemporary female character with stylish outfit and expressive facial animations.",
+    },
+    {
+      id: "metahuman-1",
+      title: "Photorealistic Human",
+      category: "MetaHuman",
+      image: "/dyyd.png",
+      description:
+        "Ultra-realistic digital human created with Unreal Engine's MetaHuman Creator technology.",
+    },
+    {
+      id: "metahuman-2",
+      title: "Fantasy Character",
+      category: "MetaHuman",
+      image: "/eed.jpg",
+      description:
+        "Fantasy-themed character with unique features and magical elements.",
+    },
+    {
+      id: "custom-human-1",
+      title: "Custom Avatar",
+      category: "Custom Humans",
+      image: "/hfz.jpg",
+      description:
+        "Personalized human character designed to match specific requirements and brand identity.",
+    },
+    {
+      id: "custom-human-2",
+      title: "Brand Ambassador",
+      category: "Custom Humans",
+      image: "Screenshot 2025-07-23 034028.png",
+      description:
+        "Professional brand representative character for marketing and promotional content.",
+    },
+    {
+      id: "animal-1",
+      title: "Realistic Wolf",
+      category: "Animals",
+      image: "Screenshot 2025-07-23 034310.png",
+      description:
+        "Highly detailed wolf character with realistic fur and natural animations.",
+    },
+    {
+      id: "animal-2",
+      title: "Majestic Eagle",
+      category: "Animals",
+      image: "/Screenshot 2025-07-23 032747.png",
+      description:
+        "Soaring eagle with detailed feathers and dynamic flight animations.",
+    },
+    {
+      id: "custom-animal-1",
+      title: "Cartoon Dog",
+      category: "Custom Animals",
+      image: "/Screenshot 2025-07-23 033020.png",
+      description:
+        "Stylized cartoon dog character perfect for children's content and games.",
+    },
+    {
+      id: "custom-animal-2",
+      title: "Fantasy Dragon",
+      category: "Custom Animals",
+      image: "/Screenshot 2025-07-23 033354.png",
+      description:
+        "Mythical dragon character with fire-breathing animations and magical effects.",
+    },
+  ];
   const testimonials = [
     {
       id: 1,
@@ -234,35 +318,74 @@ export default function Home() {
 
       {/* Navbar */}
       <Navbar />
-
-      {/* Hero Section */}
+      {/* ───────── HERO SECTION ───────── */}
       <motion.section
         ref={heroRef}
         className="min-h-screen relative flex items-center justify-center overflow-hidden z-10 pt-20"
         style={{ opacity: headerOpacity, y: headerY }}
       >
+        {/* ── looping video background ───────────────────────────── */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover opacity-80 pointer-events-none"
+          autoPlay
+          loop
+          muted
+          playsInline
+          src="/0728(1).mp4"
+        />
+
+        {/* optional dark tint over video (adjust / delete if not needed) */}
+        {/* <div className="absolute inset-0 bg-black/15 mix-blend-multiply pointer-events-none" /> */}
+
+        {/* ── foreground content ────────────────────────────────── */}
         <div className="container mx-auto px-6 z-10 pt-20">
           <div className="text-center max-w-3xl mx-auto relative z-10">
-            <p className="hero-eyebrow text-sm font-medium tracking-wider uppercase mb-2 inline-block px-3 py-1 rounded-full bg-gray-800/80 backdrop-blur-sm">
-              Premium Collection
+            {/* eyebrow */}
+            <p
+              className="
+          hero-eyebrow uppercase font-medium tracking-widest text-xs sm:text-sm
+          inline-block rounded-full bg-gray-800/60 backdrop-blur-sm
+          px-4 py-1 mb-4
+        "
+            >
+              Premium&nbsp;Collection
             </p>
 
-            <h1 className="hero-heading text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
-              <span className="block">Interactive 3D</span>
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-                Product Experience
+            {/* main headline */}
+            <h1 className="mb-6">
+              <span
+                className="
+            inline-block rounded-3xl bg-gray-800/60 backdrop-blur-sm
+            px-6 py-3
+          "
+              >
+                <span
+                  className="
+              text-5xl sm:text-7xl lg:text-8xl font-extrabold 
+            "
+                >
+                  SWAGIFYY
+                </span>
               </span>
             </h1>
 
-            <p className="hero-subheading text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Explore our premium 3D products with full interactive
-              capabilities. Rotate, zoom, and examine every detail before you
-              purchase.
+            {/* strap‑line */}
+            <p
+              className="
+          hero-subheading max-w-2xl mx-auto
+          inline-block rounded-3xl bg-gray-800/60 backdrop-blur-sm
+          text-gray-200 text-base sm:text-xl md:text-2xl leading-relaxed
+          px-6 py-3 mb-10
+        "
+            >
+              Swagifyy for advanced&nbsp;3D courses, events, architectural
+              products &amp; cutting‑edge animation services.
             </p>
 
+            {/* action buttons */}
             <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="group relative overflow-hidden">
-                <span className="relative z-10">Shop Now</span>
+                <span className="relative z-10">Shop Now</span>
                 <span className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <ShoppingBag className="ml-2 h-5 w-5 inline" />
               </Button>
@@ -273,7 +396,7 @@ export default function Home() {
                 className="group hover:border-primary bg-gray-800/50 text-white"
               >
                 <span className="group-hover:text-primary transition-colors duration-300">
-                  View Catalog
+                  View Catalog
                 </span>
                 <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300 inline-block">
                   →
@@ -282,11 +405,56 @@ export default function Home() {
             </div>
           </div>
 
+          {/* floating chevron */}
           <div className="scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 text-white">
             <ChevronDown size={30} />
           </div>
         </div>
       </motion.section>
+
+      {/* 3D Characters Gallery Section */}
+      <section className="py-20 relative z-10 bg-gradient-to-b from-gray-900 to-gray-800">
+        <div className="container mx-auto px-6 mb-12">
+          <div className="text-center">
+            <AnimatedText
+              type="chars"
+              stagger={0.02}
+              y={20}
+              className="text-sm font-medium tracking-wider uppercase text-primary inline-block px-3 py-1 rounded-full bg-primary/20 mb-4"
+              onScrollTrigger={true}
+            >
+              3D Characters Gallery
+            </AnimatedText>
+
+            <AnimatedText
+              type="words"
+              stagger={0.05}
+              y={30}
+              className="text-4xl md:text-5xl font-bold mb-6 text-white"
+              onScrollTrigger={true}
+            >
+              From CC4 to MetaHuman & Beyond
+            </AnimatedText>
+
+            <AnimatedText
+              type="lines"
+              stagger={0.08}
+              y={20}
+              className="text-lg text-gray-300 max-w-3xl mx-auto"
+              onScrollTrigger={true}
+            >
+              Discover our extensive collection of 3D characters, from
+              professional CC4 models to photorealistic MetaHumans, custom
+              characters, and stylized animals.
+            </AnimatedText>
+          </div>
+        </div>
+
+        <AutoMovingGallery items={charactersGallery} speed={60} />
+      </section>
+
+      <ArchitectureSection />
+
       <ExplodingGrid />
       <HorizontalScrollSection />
       {/* ------------------ 3‑D Product / Jacket slice -------------- */}
