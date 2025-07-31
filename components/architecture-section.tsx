@@ -10,44 +10,43 @@ export default function ArchitectureSection() {
   const architectureProjects = [
     {
       id: 1,
-      title: "Tech Conference 2024",
-      location: "Dubai World Trade Centre",
+      title: "Dubai charity Booths design",
+      location: "8 Dubai Malls ",
       date: "March 2024",
       attendees: "5,000+",
-      image: "/placeholder.svg?height=400&width=600&text=Tech+Conference+Booth",
+      image: "/images/dubai1.png",
       description:
         "Modern exhibition booth design with interactive 3D displays and immersive brand experience.",
     },
     {
       id: 2,
-      title: "Fashion Week Pavilion",
-      location: "Paris Fashion Week",
+      title: "Fujirah Uae Innovates month",
+      location: "Hilton Fujirah",
       date: "February 2024",
       attendees: "2,500+",
-      image: "/placeholder.svg?height=400&width=600&text=Fashion+Week+Pavilion",
+      image: "/images/fuj2.png",
       description:
-        "Elegant architectural structure showcasing luxury fashion brands with premium materials.",
+        "Elegant architectural structure showcasing Booths and kids area with interactive installations.",
     },
     {
       id: 3,
-      title: "Corporate Summit",
-      location: "Singapore Expo",
-      date: "January 2024",
+      title: "UAE travelars Expo",
+      location: "Dubai mshiraf Park",
+      date: "December 2025",
       attendees: "8,000+",
-      image:
-        "/placeholder.svg?height=400&width=600&text=Corporate+Summit+Design",
+      image: "/images/rem.png",
       description:
         "Professional conference setup with state-of-the-art technology and networking spaces.",
     },
     {
       id: 4,
-      title: "Art Gallery Opening",
-      location: "New York MoMA",
+      title: "Grace Preservation second conference",
+      location: "Abu Dhabi",
       date: "December 2023",
       attendees: "1,200+",
-      image: "/placeholder.svg?height=400&width=600&text=Art+Gallery+Setup",
+      image: "/images/fn.png",
       description:
-        "Minimalist gallery design emphasizing artwork presentation and visitor flow.",
+        "Technology-driven event with innovative Stage design and audience engagement features.",
     },
   ];
 

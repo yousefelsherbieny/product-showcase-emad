@@ -29,6 +29,7 @@ import ExplodingGrid from "@/components/ExplodingGrid";
 import HorizontalScrollSection from "@/components/HorizontalScrollSection";
 import AutoMovingGallery from "@/components/auto-moving-gallery";
 import ArchitectureSection from "@/components/architecture-section";
+import ImageRippleWidget from "@/components/ImageRippleWidget";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
@@ -156,6 +157,20 @@ export default function Home() {
     }
   }, [isLoaded]);
   // 3D Characters Gallery Data
+
+  const images = [
+    "https://images.pexels.com/photos/30082445/pexels-photo-30082445.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.unsplash.com/photo-1692606743169-e1ae2f0a960f?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1709949908058-a08659bfa922?q=80&w=1200&auto=format",
+    "https://images.unsplash.com/photo-1548192746-dd526f154ed9?q=80&w=1200&auto=format",
+    "https://images.unsplash.com/photo-1644141655284-2961181d5a02?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.pexels.com/photos/30082445/pexels-photo-30082445.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://assets.lummi.ai/assets/QmNfwUDpehZyLWzE8to7QzgbJ164S6fQy8JyUWemHtmShj?auto=format&w=1500",
+    "https://images.unsplash.com/photo-1706049379414-437ec3a54e93?q=80&w=1200&auto=format",
+    "https://assets.lummi.ai/assets/Qmb2P6tF2qUaFXnXpnnp2sk9HdVHNYXUv6MtoiSq7jjVhQ?auto=format&w=1500",
+    "https://images.unsplash.com/photo-1508873881324-c92a3fc536ba?q=80&w=1200&auto=format",
+  ];
+
   const charactersGallery = [
     {
       id: "cc4-male-1",
@@ -278,7 +293,6 @@ export default function Home() {
         <ObjectParticles count={40} background="#111827" />
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/70 via-transparent to-gray-900/70 pointer-events-none"></div>
       </div>
-
       {/* Loading screen with logo */}
       <AnimatePresence>
         {!isLoaded && (
@@ -315,7 +329,6 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-
       {/* Navbar */}
       <Navbar />
       {/* ───────── HERO SECTION ───────── */}
@@ -341,18 +354,9 @@ export default function Home() {
         <div className="container mx-auto px-6 z-10 pt-20">
           <div className="text-center max-w-3xl mx-auto relative z-10">
             {/* eyebrow */}
-            <p
-              className="
-          hero-eyebrow uppercase font-medium tracking-widest text-xs sm:text-sm
-          inline-block rounded-full bg-gray-800/60 backdrop-blur-sm
-          px-4 py-1 mb-4
-        "
-            >
-              Premium&nbsp;Collection
-            </p>
 
             {/* main headline */}
-            <h1 className="mb-6">
+            <h1 className="mb-14">
               <span
                 className="
             inline-block rounded-3xl bg-gray-800/60 backdrop-blur-sm
@@ -372,10 +376,10 @@ export default function Home() {
             {/* strap‑line */}
             <p
               className="
-          hero-subheading max-w-2xl mx-auto
+          hero-subheading max-w-3xl mx-auto
           inline-block rounded-3xl bg-gray-800/60 backdrop-blur-sm
-          text-gray-200 text-base sm:text-xl md:text-2xl leading-relaxed
-          px-6 py-3 mb-10
+          text-gray-200 text-base sm:text-xl md:text-4xl leading-relaxed
+          px-6 py-8 mb-20
         "
             >
               Swagifyy for advanced&nbsp;3D courses, events, architectural
@@ -411,26 +415,20 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-
+      <section className="py-32">
+        <ImageRippleWidget />
+      </section>
       {/* 3D Characters Gallery Section */}
       <section className="py-20 relative z-10 bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="container mx-auto px-6 mb-12">
           <div className="text-center">
             <AnimatedText
-              type="chars"
-              stagger={0.02}
-              y={20}
-              className="text-sm font-medium tracking-wider uppercase text-primary inline-block px-3 py-1 rounded-full bg-primary/20 mb-4"
-              onScrollTrigger={true}
-            >
-              3D Characters Gallery
-            </AnimatedText>
-
-            <AnimatedText
               type="words"
               stagger={0.05}
               y={30}
-              className="text-4xl md:text-5xl font-bold mb-6 text-white"
+              className="text-4xl md:text-5xl font-bold mb-6 text-whiteinline-block rounded-3xl bg-orange-800/60 backdrop-blur-sm
+            px-6 py-3
+         "
               onScrollTrigger={true}
             >
               From CC4 to MetaHuman & Beyond
@@ -452,15 +450,12 @@ export default function Home() {
 
         <AutoMovingGallery items={charactersGallery} speed={60} />
       </section>
-
       <ArchitectureSection />
-
       <ExplodingGrid />
-      <HorizontalScrollSection />
+      {/* <HorizontalScrollSection /> */}
       {/* ------------------ 3‑D Product / Jacket slice -------------- */}
-      <section className="w-full relative z-10 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
+      {/* <section className="w-full relative z-10 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
         <div className="w-full px-0">
-          {/* heading */}
           <div className="text-center py-16">
             <AnimatedText
               type="chars"
@@ -491,7 +486,6 @@ export default function Home() {
           </div>
 
           <div className="w-full grid md:grid-cols-2 gap-0">
-            {/* 🟢 FIXED viewer wrapper — sticky, full‑width, taller, own GPU layer */}
             <div
               className="
                 relative w-full
@@ -510,7 +504,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* right‑side marketing copy */}
             <div className="h-[80vh] flex items-center justify-center p-8 md:p-12 bg-gray-800/30">
               <div className="space-y-6 max-w-lg">
                 <div className="space-y-4">
@@ -588,16 +581,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
-
+      </section> */}
       {/* 3D Product Viewer Section */}
-
       {/* Interactive Models Section with Hover Effects */}
-      <InteractiveModelsSection />
-
+      {/* <InteractiveModelsSection /> */}
       {/* Scroll Animation Section */}
-      <ScrollAnimationSection />
-      {/* Product Collection */}
+      {/* <ScrollAnimationSection /> */}
+      Product Collection
       <section className="py-20 relative z-10">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
@@ -637,7 +627,6 @@ export default function Home() {
           <ProductGallery />
         </div>
       </section>
-
       {/* Testimonials Section */}
       <section className="py-20 relative z-10">
         <div className="absolute inset-0 bg-gray-800/30 backdrop-blur-sm"></div>
@@ -683,7 +672,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 relative z-10">
         <div className="absolute inset-0 bg-gray-800/50 backdrop-blur-sm"></div>
@@ -730,7 +718,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="py-12 bg-gray-900/80 backdrop-blur-md text-white relative z-10 border-t border-gray-800">
         <div className="container mx-auto px-6">
