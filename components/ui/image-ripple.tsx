@@ -181,7 +181,7 @@ function Model() {
     image1.scale.y = 1920 / 4;
     group.add(image1);
 
-    const texture2 = useTexture("/A1.jpg");
+    const texture2 = useTexture("/download.png");
     const material2 = new THREE.MeshBasicMaterial({ map: texture2 });
     const image2 = new THREE.Mesh(geometry, material2);
     image2.position.x = -0.001 * viewport.width;
@@ -191,15 +191,15 @@ function Model() {
     image2.scale.y = 1920 / 4;
     group.add(image2);
 
-    // const texture3 = useTexture('/picture3.jpeg');
-    // const material3 = new THREE.MeshBasicMaterial({ map: texture3 });
-    // const image3 = new THREE.Mesh(geometry, material3);
-    // image3.position.x = 0.25 * viewport.width;
-    // image3.position.y = 0;
-    // image3.position.z = 1;
-    // image3.scale.x = viewport.width / 5;
-    // image3.scale.y = viewport.width / 4;
-    // group.add(image3);
+    const texture3 = useTexture("/download.png");
+    const material3 = new THREE.MeshBasicMaterial({ map: texture3 });
+    const image3 = new THREE.Mesh(geometry, material3);
+    image3.position.x = 0.25 * viewport.width;
+    image3.position.y = 0;
+    image3.position.z = 1;
+    image3.scale.x = viewport.width / 5;
+    image3.scale.y = viewport.width / 4;
+    group.add(image3);
 
     scene.add(group);
     return { scene, camera };

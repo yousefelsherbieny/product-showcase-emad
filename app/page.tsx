@@ -30,6 +30,7 @@ import HorizontalScrollSection from "@/components/HorizontalScrollSection";
 import AutoMovingGallery from "@/components/auto-moving-gallery";
 import ArchitectureSection from "@/components/architecture-section";
 import ImageRippleWidget from "@/components/ImageRippleWidget";
+import ScrollTriggerGallery from "@/components/scroll-trigger-gallery";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
@@ -415,9 +416,12 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
+      <ScrollTriggerGallery />
+      {/* Hover photos Section */}
+      {/* 
       <section className="py-32">
         <ImageRippleWidget />
-      </section>
+      </section> */}
       {/* 3D Characters Gallery Section */}
       <section className="py-20 relative z-10 bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="container mx-auto px-6 mb-12">
