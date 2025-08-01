@@ -24,22 +24,22 @@ const contactMethods = [
     icon: <Mail className="w-5 h-5 text-blue-500" />,
     title: "Email Us",
     desc: "Send us an email anytime",
-    contact: "hello@swagifyy.com",
-    action: "mailto:hello@swagifyy.com",
+    contact: "abdallahemad800@gmail.com",
+    action: "mailto:abdallahemad800@gmail.com",
   },
   {
     icon: <Phone className="w-5 h-5 text-green-500" />,
     title: "Call Us",
     desc: "Mon–Fri from 9 am to 6 pm",
-    contact: "+1 (555) 123‑4567",
-    action: "tel:+15551234567",
+    contact: "+20 111 655 5793",
+    action: "tel:+971 56 143 2193",
   },
   {
     icon: <MapPin className="w-5 h-5 text-red-500" />,
     title: "Visit Us",
     desc: "Come say hello at our office",
-    contact: "123 Business St, New York, NY 10001",
-    action: "https://maps.google.com",
+    contact: "Ajman, United Arab Emirates",
+    action: "https://maps.app.goo.gl/QJr5aqY6SHn1TmZ56",
   },
 ];
 

@@ -31,6 +31,7 @@ import AutoMovingGallery from "@/components/auto-moving-gallery";
 import ArchitectureSection from "@/components/architecture-section";
 import ImageRippleWidget from "@/components/ImageRippleWidget";
 import ScrollTriggerGallery from "@/components/scroll-trigger-gallery";
+import HomeCoursesSection from "@/components/home-courses-section";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
@@ -377,11 +378,13 @@ export default function Home() {
             {/* strap‑line */}
             <p
               className="
-          hero-subheading max-w-3xl mx-auto
-          inline-block rounded-3xl bg-gray-800/60 backdrop-blur-sm
-          text-gray-200 text-base sm:text-xl md:text-4xl leading-relaxed
-          px-6 py-8 mb-20
-        "
+    hero-subheading
+    max-w-6xl   
+    mx-auto  
+    rounded-3xl bg-gray-800/60 backdrop-blur-sm
+    text-gray-200 text-base sm:text-xl md:text-2xl leading-relaxed
+    px-6 py-4 mb-10
+  "
             >
               Swagifyy for advanced&nbsp;3D courses, events, architectural
               products &amp; cutting‑edge animation services.
@@ -416,12 +419,13 @@ export default function Home() {
           </div>
         </div>
       </motion.section>
-      <ScrollTriggerGallery />
+      {/* <ScrollTriggerGallery /> */}
       {/* Hover photos Section */}
       {/* 
       <section className="py-32">
         <ImageRippleWidget />
       </section> */}
+      <HomeCoursesSection />
       {/* 3D Characters Gallery Section */}
       <section className="py-20 relative z-10 bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="container mx-auto px-6 mb-12">
