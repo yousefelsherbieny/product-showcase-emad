@@ -109,7 +109,7 @@ const courses = [
     level: "Intermediate",
     duration: "14 weeks",
     students: "780+",
-    image: "/grll.Png",
+    image: "/grll.png",
     modules: 30,
     videos: 210,
     downloads: 73,
