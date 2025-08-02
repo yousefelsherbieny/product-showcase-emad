@@ -5,9 +5,7 @@ import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 const serviceAccount = JSON.parse(
-  Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64!, "base64").toString(
-    "utf-8"
-  )
+  Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64!, "base64").toString("utf-8")
 );
 
 if (!getApps().length) {
@@ -24,18 +22,14 @@ export async function GET(req: NextRequest) {
   const courseId = searchParams.get("courseId");
 
   if (!uid || !courseId) {
-    return NextResponse.json(
-      { error: "Missing uid or courseId" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Missing uid or courseId" }, { status: 400 });
   }
 
   const snapshot = await db
     .collection("users")
     .doc(uid)
     .collection("courses")
-    .doc(courseId)
-    .get()
+    .where("courseId", "==", courseId)
     .limit(1)
     .get();
 

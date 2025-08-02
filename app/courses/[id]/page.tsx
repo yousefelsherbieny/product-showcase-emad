@@ -8,55 +8,127 @@ import Image from "next/image";
 import ObjectParticles from "@/components/backgrounds/object-particles";
 
 const courses = [
+  /* 1 — Blender */
   {
-    id: "1",
-    title: "Master The Art Of Product Modelling & Animation In Blender",
-    category: "3D Courses",
-    price: "EGP 7,500",
-    image: "/images/grll.png",
-    description: `Dive deep into Blender’s modeling and animation toolset. By the end of this course you’ll be able to model, texture, rig and bring your product designs to life with photorealistic renders and smooth animations.`,
-    syllabus: [
-      "Introduction to Blender UI & Navigation",
-      "Modeling Techniques: Boxes, Curves & Sculpt",
-      "UV Unwrapping & Texturing",
-      "Lighting & Photorealistic Rendering",
-      "Basic Rigging & Animation",
-      "Final Project: Animated Product Showcase",
+    id: "blender",
+    title: "Blender Product Modelling & VFX",
+    description:
+      "Model, texture, light and animate world-class product visuals – then add VFX & CGI magic.",
+    priceEg: 7500,
+    level: "Beginner",
+    duration: "12 weeks",
+    students: "1 200+",
+    image: "/perf.png",
+    modules: 28,
+    videos: 190,
+    downloads: 65,
+    category: "3D Design",
+    features: [
+      "Asset import & kitbashing",
+      "Hard-surface & organic sculpting",
+      "Lighting setups & photoreal rendering",
+      "Intro to Geometry Nodes VFX",
+      "Rigging with Mixamo ⇄ CC4",
     ],
   },
+
+  /* 2 — Marvelous Designer */
   {
-    id: "2",
-    title: "The Magic of VFX in Blender!",
-    category: "VFX Courses",
-    price: "EGP 5,000",
-    image: "/images/grll.png",
-    description: `Unlock the secrets of visual effects: particle sims, dynamics, green‑screen compositing and camera tracking—all inside Blender for blockbuster‑style shots.`,
-    syllabus: [
-      "Particle Systems & Smoke",
-      "Rigid Body & Cloth Simulation",
-      "Camera Tracking & Matchmoving",
-      "Compositing & Color Grading",
-      "Creating Explosions & Fire",
-      "Project: Integrate a 3D Object into Live Footage",
+    id: "marvelous",
+    title: "Marvelous Designer Simulation",
+    description:
+      "Design garments, drape in real-time physics & export to Unreal, Blender, Z-Brush & CC4.",
+    priceEg: 6200,
+    level: "Beginner",
+    duration: "8 weeks",
+    students: "930+",
+    image: "/clth.webp",
+    modules: 18,
+    videos: 124,
+    downloads: 42,
+    category: "Fashion Simulation",
+    features: [
+      "Pattern drafting fundamentals",
+      "Cloth optimisation vs CLO3D",
+      "Retopology for real-time engines",
+      "Export presets for UE + MetaHuman",
+      "Live link to iClone/CC4 pipeline",
     ],
   },
+
+  /* 3 — CC4 & iClone */
   {
-    id: "3",
-    title: "Ultimate CGI & VFX Bundle",
-    category: "Bundles",
-    price: "EGP 8,100",
-    image: "/images/grll.png",
-    description: `All‑in‑one package covering both product modeling and VFX workflows. A complete career‑ready toolkit.`,
-    syllabus: [
-      "Module 1: Product Modeling in Blender",
-      "Module 2: Texturing & Shading",
-      "Module 3: Animation Basics",
-      "Module 4: Particle & Fluid Sims",
-      "Module 5: Compositing & FX",
-      "Capstone: Short CGI & VFX Reel",
+    id: "cc4",
+    title: "Character Creator 4 & iClone Pipeline",
+    description:
+      "Build, animate & motion-capture AAA-ready characters – then push to UE, Unity or Web.",
+    priceEg: 8200,
+    level: "Advanced",
+    duration: "10 weeks",
+    students: "640+",
+    image: "/B1.jpg",
+    modules: 22,
+    videos: 150,
+    downloads: 55,
+    category: "Character Animation",
+    features: [
+      "Headshot & skin-gen mastery",
+      "AccuRig + live MoCap (Rokoko, Perception Neuron)",
+      "Phys-X cloth & hair",
+      "Auto-LOD & optimisation for mobile",
+      "One-click export to Blender / UE / Unity",
     ],
   },
-];
+
+  /* 4 — Unreal Engine */
+  {
+    id: "unreal",
+    title: "Unreal Engine for Realtime Experiences",
+    description:
+      "Your go-to course for photoreal arch-viz, virtual production & interactive events.",
+    priceEg: 9600,
+    level: "Intermediate",
+    duration: "14 weeks",
+    students: "780+",
+    image: "/grll.png",
+    modules: 30,
+    videos: 210,
+    downloads: 73,
+    category: "Game & Virtual Production",
+    features: [
+      "Nanite, Lumen & path-tracing",
+      "Blueprints for non-coders",
+      "MetaHuman animation & Live Link",
+      "DMX & events integration (your speciality!)",
+      "Packaging for desktop + mobile",
+    ],
+  },
+
+  /* 5 — React-Three-Fiber */
+  {
+    id: "rtf",
+    title: "React-Three-Fiber / Three.js Crash Course",
+    description:
+      "From zero to interactive 3D websites. Build the same tech powering SWAGIFYY.",
+    priceEg: 5400,
+    level: "Beginner",
+    duration: "6 weeks",
+    students: "1 050+",
+    image: "/download.png",
+    modules: 15,
+    videos: 95,
+    downloads: 34,
+    category: "Web 3D Development",
+    features: [
+      "R3F scene setup & lighting",
+      "GLTF + Draco optimisation",
+      "Shaders with drei / react-postprocessing",
+      "Scroll & gesture controls",
+      "Deploy on Vercel + CDN asset strategy",
+    ],
+  },
+]
+
 
 export default function CourseDetailPage() {
   const { id } = useParams();
@@ -114,7 +186,7 @@ export default function CourseDetailPage() {
               priority
             />
             <div className="absolute top-4 right-4 bg-purple-600 text-white text-sm px-3 py-1 rounded-full shadow-lg">
-              {course.price}
+              {course.priceEg}
             </div>
           </div>
 
@@ -128,7 +200,7 @@ export default function CourseDetailPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold">What You’ll Learn</h2>
             <ul className="list-disc list-inside space-y-2 text-gray-300">
-              {course.syllabus.map((item, idx) => (
+              {course.features.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
             </ul>
